@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <!-- www.phpied.com/conditional-comments-block-downloads/ -->
+    <!-- Always force latest IE rendering engine
+         (even in intranet) & Chrome Frame
+         Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+    <!--  Mobile Viewport Fix 
+          j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
+          device-width: Occupy full width of the screen in its current orientation
+          initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+          user-scalable = yes allows the user to zoom in -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{=response.title or request.application}}</title>
+    <!-- http://dev.w3.org/html5/markup/meta.name.html -->
+    <meta name="application-name" content="{{=request.application}}">
+    <!-- Speaking of Google, don't forget to set your site up:
+         http://google.com/webmasters -->
+    <meta name="google-site-verification" content="">
+       
+    <!-- include stylesheets -->
+    <!-- <link rel="stylesheet" type="text/css" href="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.css" />   -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!-- <link rel="stylesheet" href="{{=URL('static','css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap4.css')}}"/>     -->
+    <link rel="shortcut icon" href="{{=URL('static','images/merch_logo_9VV_icon.ico')}}" type="image/x -icon">
+    
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@1.9.4/dist/quasar.min.css" rel="stylesheet" type="text/css"> -->
+    <link rel="stylesheet" href="{{=URL('static','dist/css/bootstrap.min.css')}}"/>
+    <!-- <link rel="stylesheet" href="{{=URL('static','dist/css/font-awesome.min.css')}}"/> -->
+    
+    <!-- <link rel="stylesheet" href="{{=URL('static','dist/css/ionicons.min.css')}}"/> -->
+    <!-- <link rel="stylesheet" href="{{=URL('static','dist/css/dataTables.bootstrap.min.css')}}"/> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>          -->    
+
+    <link rel="stylesheet" href="{{=URL('static','dist/css/AdminLTE.min.css')}}"/>    
+    <link rel="stylesheet" href="{{=URL('static','dist/css/skin-red.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','dist/bootstrap-table-master/dist/bootstrap-table.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','dist/alertify/css/alertify.min.css')}}"/>
+    <link rel="stylesheet" href="{{=URL('static','dist/alertify/css/themes/semantic.css')}}"/>         
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"/> 
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css"/> 
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowreorder/1.2.7/css/rowReorder.dataTables.min.css"/> 
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css"/> 
+    
+    <script src="{{=URL('static','dist/pace-1.0.2/pace.min.js')}}"></script>
+    <link rel="stylesheet" href="{{=URL('static','dist/pace-1.0.2/themes/blue/pace-theme-center-simple.css')}}"/>	    
+    
+    <!-- All JavaScript at the bottom, except for Modernizr which enables
+         HTML5 elements & feature detects -->
+    <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+    <script src="{{=URL('static','dist/js/fastclick.js')}}"></script>
+    <!-- Favicons -->
+    {{include 'web2py_ajax.html'}} <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+    {{block head}}{{end}}
+    <style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;box-sizing: content-box;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style>
+  </head>
+  <body class="skin-red sidebar-mini" style="height: auto; min-height: 100%;" >   
+    {{if ('auth' in globals()):}}
+      <div class="wrapper" style="height: auto; min-height: 100%;">
+        
+        <header class="main-header">
+          
+          <!-- Logo -->
+          <!-- <a href="http://localhost:3020/Merch_ERP" class="logo"> -->
+          <a href="http://128.1.2.2:3010/Merch_HR" class="logo">
+            
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini">M</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><img src="{{=URL('static','images/Merch.jpg')}}" width="200" height="50"></span>
+          </a>
+          <!-- Header Navbar: style can be found in header.less -->
+          <nav class="navbar navbar-static-top">      
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            
+            <div class="navbar-custom-menu">
+              
+              <ul class="nav navbar-nav">                
+                {{if (auth.user_id != None) &  (auth.has_membership(role = 'MANAGEMENT')) | (auth.has_membership(role = 'ROOT')):}}
+                
+                <li class="dropdown notifications-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <i class="fa fa-bell-o"></i>
+                      <span class="label label-warning">{{=db((db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id == 6)).count() + db(db.Salary_Adjustment.status_id == 3).count()}} </span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="header">You have {{=db((db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id == 6)).count() + db(db.Salary_Adjustment.status_id == 3).count()}} notifications</li>
+                    <li>
+                      <!-- inner menu: contains the actual data -->
+                      <ul class="menu">
+                        {{if db((db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id == 6)).count():}}
+                        <li>
+                          <a href="{{=URL('leave_mngt','get_application_mngt_leave_grid')}}">
+                            <i class="fa fa-users text-green"></i> {{=db((db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id == 6)).count()}} Leave
+                          </a>
+                        </li>
+                        {{ pass }}
+                        <!-- <li>
+                          <a href="#">
+                            <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                            page and may cause design problems
+                          </a>
+                        </li> -->
+                        {{ if db(db.Salary_Adjustment.status_id == 3).count():}}
+                        <li>
+                          <a href="{{=URL('leave_mngt','get_salary_adjustment_grid', args = 1)}}">
+                            <i class="fa fa-users text-red"></i> {{=db(db.Salary_Adjustment.status_id == 3).count()}} Salary Adjustment
+                          </a>
+                        </li>
+                        {{pass}}
+                        <!-- <li>
+                          <a href="#">
+                            <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <i class="fa fa-user text-red"></i> You changed your username
+                          </a>
+                        </li> -->
+                      </ul>
+                    </li>
+                    
+                  </ul>
+                </li>    
+                {{pass}}            
+                <!-- User Account: style can be found in dropdown.less -->
+                <li class="dropdown user user-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <!-- <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> -->
+                    <span class="hidden-xs">{{if auth.user:}}{{=auth.user.first_name}} {{=auth.user.last_name}}{{else:}}LOGIN{{pass}}</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <!-- User image -->
+                    <li class="user-header">
+                      <!-- <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"> -->
+                      
+                      <p>
+                        {{if auth.user:}}{{=auth.user.first_name.upper()}} {{=auth.user.last_name.upper()}}  
+                        {{ pass }}
+                      </p>
+                      
+                    </li>
+                    <!-- Menu Footer-->
+                    <li class="user-footer">
+                      <!-- <div class="pull-left">
+                        <a href="{{=URL('default','user/profile')}}" class="btn btn-default btn-flat">Profile</a>
+                      </div> -->
+                      <div class="pull-right">
+                        <a href="{{=URL('default','user/logout')}}" class="btn btn-default btn-flat">Sign out</a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <!-- Control Sidebar Toggle Button -->
+                <!-- <li>
+                  <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li> -->
+              </ul>
+            </div>
+          </nav>
+        </header>
+       
+       
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+          
+          <!-- sidebar: style can be found in sidebar.less -->
+          <section class="sidebar">
+            <!-- Sidebar user panel -->
+            
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu tree" data-widget="tree">
+              <li class="header">MAIN NAVIGATION</li>
+              {{if (auth.user_id != None) &  (auth.has_membership(role = 'MANAGEMENT')) | (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'HR MANAGER')) | (auth.has_membership(role = 'ROOT')):}}  
+              <li><a href="{{=URL('default','index')}}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+              <li><a href="{{=URL('leave_mngt','get_application_report_grid')}}"><i class="fa fa-user-plus"></i> My Workflow Report</a></li>             
+              <li class="treeview menu">
+                <a href="#">
+                  <i class="fa fa-user-circle-o"></i> <span>Core HR/HRIS</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>                  
+                </a>
+                <ul class="treeview-menu">                    
+                  <li class="treeview menu">
+                    <a href="#"><i class="fa fa-caret-right"></i> Employee
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu" >
+                      <li><a href="{{=URL('hris','get_employee_master_grid')}}"><i class="fa fa-caret-right"></i> Employee Master</a></li>
+                      <li><a href="{{=URL('hris','get_in_active_employee_master_grid')}}"><i class="fa fa-caret-right"></i> In-Active Employee</a></li>
+                      {{if (auth.user_id != None) &  (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'HR MANAGER')) | (auth.has_membership(role = 'ROOT')):}}  
+                      <li><a href="{{=URL('hris','post_employee_master')}}"><i class="fa fa-caret-right"></i> New</a></li>
+                      {{pass}}
+                      <li><a href="{{=URL('hris','get_leave_chart_grid')}}"><i class="fa fa-caret-right"></i> <span>Leave Chart</span></a></li>
+                    </ul>
+                  </li>  
+                                    
+                  <li class="treeview menu">
+                    <a href="#">
+                      <i class="fa fa-caret-right"></i> <span>HR Reports</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>                                 
+                    <ul class="treeview-menu" >            
+                      <li><a href="{{=URL('hris','get_employee_master_report_grid')}}"><i class="fa fa-caret-right"></i> Employee Master</a></li>      
+                      <li><a href="{{=URL('hris','get_employee_address_report_grid')}}"><i class="fa fa-caret-right"></i> Address Details</a></li>
+                      <li><a href="{{=URL('hris','get_employment_details_report_grid')}}"><i class="fa fa-caret-right"></i> Employment Details</a></li>
+                      <li><a href="{{=URL('hris','get_employment_account_info_report_grid')}}"><i class="fa fa-caret-right"></i> Salary Details</a></li>
+                      <li><a href="{{=URL('hris','get_card_report_grid')}}"><i class="fa fa-caret-right"></i> Expiry Dates</a></li>          
+                    </ul>
+                  </li>    
+                  <li><a href="{{=URL('hr_reminders','get_hr_reminders_grid')}}"><i class="fa fa-caret-right"></i> <span>HR Reminders</span></a></li>
+                  <li class="treeview menu">
+                    <a href="#"><i class="fa fa-cog"></i> Settings
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu" >
+                      <li><a href="{{=URL('hris','get_record_status_grid')}}"><i class="fa fa-caret-right"></i> Record Status</a></li>
+                      <li><a href="{{=URL('hris','get_employee_status_grid')}}"><i class="fa fa-caret-right"></i> Employee Status</a></li>
+                      <li><a href="{{=URL('hris','get_department_grid')}}"><i class="fa fa-caret-right"></i> Department</a></li>
+                      <li><a href="{{=URL('hris','get_designation_grid')}}"><i class="fa fa-caret-right"></i> Designation</a></li>
+                      <li><a href="{{=URL('hris','get_section_grid')}}"><i class="fa fa-caret-right"></i> Section</a></li>
+                      <li><a href="{{=URL('hris','get_labor_card_profession_grid')}}"><i class="fa fa-caret-right"></i> Labor Card Profession</a></li>
+                      <li><a href="{{=URL('default','get_bank_account_grid')}}"><i class="fa fa-caret-right"></i> Bank Account</a></li>
+                      <li><a href="{{=URL('default','get_sponsor_grid')}}"><i class="fa fa-caret-right"></i> Sponsor's</a></li>
+                      <li><a href="{{=URL('hr_reminders','get_hr_reminders_status_grid')}}"><i class="fa fa-caret-right"></i> HR Reminders Status</a></li>
+                    </ul>
+                  </li>                                        
+                  
+                </ul>
+                
+                
+              </li>               
+              <li class="treeview menu"><a href="#"><i class="fa fa-bookmark-o"></i> <span>HR Registry</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+                <ul class="treeview-menu">
+                  <li><a href="{{=URL('hr_registry','get_hr_registry_grid')}}"><i class="fa fa-caret-right"></i> <span>Overtime/Extra Hours</span></a></li>
+                </ul>
+              </li>
+              <li class="treeview menu">
+                <a href="#">
+                  <i class="fa fa-money"></i> <span>Payroll Management</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>                                 
+                <ul class="treeview-menu" >
+                  <li><a href="#"><i class="fa fa-caret-right"></i> Dashboard</a></li>
+                  <li><a href="{{=URL('payroll_mngt','get_payroll_run')}}"><i class="fa fa-caret-right"></i> Run Payroll</a></li>
+                  <li><a href="{{=URL('hris','get_employee_master_grid')}}"><i class="fa fa-caret-right"></i> Employees</a></li>
+                  <li><a href="{{=URL('payroll_mngt','get_salary_details_report')}}"><i class="fa fa-caret-right"></i> Reports</a></li>                 
+                  <li><a href="#"><i class="fa fa-caret-right"></i> Payroll History</a></li>
+                  <li><a href="#"><i class="fa fa-caret-right"></i> Benefits</a></li>
+                  <li><a href="{{=URL('payroll_mngt','get_overtime_grid')}}"><i class="fa fa-caret-right"></i> Overtime</a></li>
+                 
+                  <li><a href="{{=URL('payroll_mngt','get_overtime_status_grid')}}"><i class="fa fa-caret-right"></i> Settings</a></li>
+                </ul>
+              </li>
+             
+              {{pass}}
+              {{if (auth.user_id != None) &  (auth.has_membership(role = 'DEPARTMENT USERS')) | (auth.has_membership(role = 'BACK OFFICE DEPARTMENT'))| (auth.has_membership(role = 'DEPARTMENT MANAGERS')) | (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'HR MANAGER')) | (auth.has_membership(role = 'MANAGEMENT')) | (auth.has_membership(role = 'ACCOUNTS')) | (auth.has_membership(role = 'ROOT')):}}
+              <li class="treeview menu">  
+                  <a href="#">
+                    <i class="fa fa-user-o"></i> <span>Employee Self-Services</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'DEPARTMENT USERS'))  | (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'ROOT')):}}
+                    <li><a href="{{=URL('leave_mngt','get_application_leave_grid')}}"><i class="fa fa-caret-right"></i> Leave Application Grid</a></li>                    
+                    {{pass}}
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'ROOT')):}}                    
+                    <li><a href="{{=URL('leave_mngt','get_salary_adjustment_grid', args = 1)}}"><i class="fa fa-caret-right"></i> Salary Adjustment Grid</a> </li>
+                    <li><a href="{{=URL('leave_mngt','get_doc_ref_report_grid')}}"><i class="fa fa-caret-right"></i> Document Ref. Reports</a></li>                    
+                    {{pass}}
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'DEPARTMENT MANAGERS')) | (auth.has_membership(role = 'BACK OFFICE DEPARTMENT')):}}
+                    <li><a href="{{=URL('leave_mngt','get_application_dept_leave_grid')}}"><i class="fa fa-caret-right"></i> Leave Application Grid</a></li>
+                    <li><a href="{{=URL('leave_mngt','get_application_dept_leave_chart_grid')}}"><i class="fa fa-caret-right"></i> Leave Chart Grid</a></li>
+                    {{pass}}
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'HR MANAGER')):}}                    
+                    <li><a href="{{=URL('leave_mngt','get_application_hr_leave_grid')}}"><i class="fa fa-caret-right"></i> HR Approval</a></li>        
+                    <li><a href="{{=URL('leave_mngt','get_salary_adjustment_grid', args = 1)}}"><i class="fa fa-caret-right"></i> Salary Adjustment Grid</a></li>                              
+                    {{pass}}
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'ACCOUNTS')):}}                    
+                    <li><a href="{{=URL('leave_mngt','get_application_leave_account_grid')}}"><i class="fa fa-caret-right"></i>  Leave Settlement Grid</a></li>                  
+                    <li><a href="{{=URL('leave_mngt','get_application_leave_grid')}}"><i class="fa fa-caret-right"></i>  Leave Application Grid</a></li>                  
+                    {{pass}}
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'MANAGEMENT')) | (auth.has_membership(role = 'ROOT')):}}
+                    <li><a href="{{=URL('leave_mngt','get_application_mngt_leave_grid')}}"><i class="fa fa-caret-right"></i> Leave
+                      {{if db((db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id == 6)).count():}}
+                      <span class="pull-right-container">
+                        <small class="label pull-right bg-green">{{=db((db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id == 6)).count()}}</small>                        
+                      </span>
+
+                      {{pass}}
+                    </a></li>
+                    <li><a href="{{=URL('leave_mngt','get_salary_adjustment_grid', args = 1)}}"><i class="fa fa-caret-right"></i> Salary Adjustment
+                      {{if db(db.Salary_Adjustment.status_id == 3).count():}}
+                      <span class="pull-right-container">
+                        <small class="label pull-right bg-red">{{=db(db.Salary_Adjustment.status_id == 3).count()}}</small>                        
+                      </span>
+                      {{pass}}
+                    </a></li>
+                    {{if (auth.user_id != None) & (auth.has_membership(role = 'ADMINISTRATION MANAGER')):}}
+                    <li><a href="{{=URL('leave_mngt','get_doc_ref_report_grid')}}"><i class="fa fa-caret-right"></i> Document Ref. Reports</a></li>                    
+                    {{pass}}
+                    <li><a href="#"><i class="fa fa-caret-right"></i> Cash/Company Loan</a></li>                                    
+                    <li><a href="#"><i class="fa fa-caret-right"></i> Petty Cash</a></li>                  
+                    <li><a href="#"><i class="fa fa-caret-right"></i> Salary Certificate</a></li>        
+                    {{if (auth.user_id != None) &  (auth.has_membership(role = 'ROOT')):}}
+                    <li class="treeview" style="height: auto;">
+                      <a href="#"><i class="fa fa-cogs"></i> Settings
+                        <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                      </a>
+                      <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{{=URL('leave_mngt','get_type_leave_grid')}}"><i class="fa fa-caret-right"></i> Leave Type</a></li>
+                        <li><a href="{{=URL('leave_mngt','get_leave_status_grid')}}"><i class="fa fa-caret-right"></i> Leave Status</a></li>
+                        <li><a href="{{=URL('leave_mngt','get_salary_adjustment_status_grid')}}"><i class="fa fa-caret-right"></i> Salary Adjustment Status</a></li>
+                        <li><a href="{{=URL('default','get_managers_assignment')}}"><i class="fa fa-caret-right"></i> User's Assignment</a></li>
+
+                      </ul>
+                    </li>
+                    {{pass}}
+                    {{pass}}
+
+                  </ul>
+                </li>              
+              {{if (auth.user_id != None) &  (auth.has_membership(role = 'DEPARTMENT USERS')) | (auth.has_membership(role = 'BACK OFFICE DEPARTMENT')) | (auth.has_membership(role = 'ACCOUNTS')) |(auth.has_membership(role = 'DEPARTMENT MANAGERS')):}}
+              <li><a href="{{=URL('leave_mngt','get_application_report_grid')}}"><i class="fa fa-print"></i> <span>Reports</span></a></li>
+              {{pass}}
+              {{if (auth.user_id != None) &  (auth.has_membership(role = 'HR MANAGER')) | (auth.has_membership(role = 'ADMINISTRATION')) | (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'MANAGEMENT')) | (auth.has_membership(role = 'ROOT')):}}
+              <li class="treeview menu">
+                <a href="#">
+                  <i class="fa fa-envelope-o"></i> <span>Communication</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="{{=URL('communication', 'get_incoming_mail_grid')}}"><i class="fa fa-caret-right"></i> Incoming Mail</a></li>
+                  <li class="treeview menu"><a href="#"><i class="fa fa-caret-right"></i> Outgoing Mail
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>                    
+                    </a>
+                    <ul class="treeview-menu">
+                      <li><a href="{{=URL('communication', 'get_outgoing_mail_form')}}"><i class="fa fa-caret-right"></i> Form Outgoing Mail</a></li>
+                      <li><a href="{{=URL('communication', 'get_outgoing_mail_grid')}}"><i class="fa fa-caret-right"></i> Grid Outgoing Mail</a></li>
+                    </ul>                    
+                  </li>
+                  <li class="treeview menu"><a href="#"><i class="fa fa-caret-right"></i> Circular
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <li><a href="{{=URL('communication', 'get_circular_form')}}"><i class="fa fa-caret-right"></i> Form Circular</a></li>
+                    <li><a href="{{=URL('communication', 'get_circular_grid')}}"><i class="fa fa-caret-right"></i> Grid Circular</a></li>
+                  </ul>
+
+                </li>
+                  <li class="treeview menu"><a href="#"><i class="fa fa-caret-right"></i> Memorandum
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <li><a href="{{=URL('communication', 'get_memorandum_form')}}"><i class="fa fa-caret-right"></i> Form Memorandum</a></li>
+                      <li><a href="{{=URL('communication', 'get_memorandum_grid')}}"><i class="fa fa-caret-right"></i> Grid Memorandum</a></li>
+                    </ul>
+                  </li>
+                  <!-- <li><a href="{{=URL('communication', 'get_outgoing_mail_grid')}}"><i class="fa fa-caret-right"></i> Outgoing Mail</a></li> -->
+                  <!-- <li><a href="{{=URL('communication', 'get_circular_grid')}}"><i class="fa fa-caret-right"></i> Circular</a></li> -->
+                  <!-- <li><a href="{{=URL('communication', 'get_memorandum_grid')}}"><i class="fa fa-caret-right"></i> Memorandum</a></li> -->
+                  <li><a href="{{=URL('communication', 'get_fax_grid')}}"><i class="fa fa-caret-right"></i> Fax</a></li>
+                  {{if (auth.user_id != None) &  (auth.has_membership(role = 'ROOT')): }}
+                  <li><a href="{{=URL('communication', 'get_comm_tranx_prefix_grid')}}"><i class="fa fa-caret-right"></i> Settings</a></li>
+                  {{ pass }}
+                </ul>
+              </li>
+              {{ pass }}
+              {{if (auth.user_id != None) &  (auth.has_membership(role = 'HR MANAGER')) | (auth.has_membership(role = 'ADMINISTRATION MANAGER')) | (auth.has_membership(role = 'MANAGEMENT')) | (auth.has_membership(role = 'ROOT')):}}
+              <li class="treeview menu">
+                <a href="#">
+                  <i class="fa fa-print"></i> <span>Reports</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>                                 
+                <ul class="treeview-menu" >
+                  <li><a href="{{=URL('leave_mngt','get_joining_report_grid')}}"><i class="fa fa-caret-right"></i> Joining Report Grid</a></li>
+                  <li><a href="{{=URL('leave_mngt','get_leave_report_grid')}}"><i class="fa fa-caret-right"></i> Leave Report Grid</a></li>
+                  <li><a href="{{=URL('leave_mngt','get_years_of_services_report_grid')}}"><i class="fa fa-caret-right"></i> Year of Service</a></li>
+                  <li><a href="{{=URL('leave_mngt','get_rejected_leave_report_grid')}}"><i class="fa fa-caret-right"></i> Rejected Leave</a></li>
+                  <li><a href="{{=URL('leave_mngt','get_pending_leave_application_report_grid')}}"><i class="fa fa-caret-right"></i> Pending Leave Application</a></li>
+                  <li><a href="{{=URL('leave_mngt','get_on_leave_report_grid')}}"><i class="fa fa-caret-right"></i> On-Leave </a></li>
+                  <li><a href="{{=URL('leave_mngt','get_salary_adjustment_grid', args = 2)}}"><i class="fa fa-caret-right"></i> Salary Adjustment Grid</a></li>                  
+                  <li class="treeview menu">
+                    <a href="#">
+                      <i class="fa fa-caret-right"></i> <span>Leave File</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <li><a href="{{=URL('leave_mngt','get_leave_file_report', args = 1)}}"><i class="fa fa-caret-right"></i> Past Two Years</a></li>
+                      <li><a href="{{=URL('leave_mngt','get_leave_file_report', args = 2)}}"><i class="fa fa-caret-right"></i> Show All</a></li>
+                    </ul>
+                  </li>
+
+                </ul>
+              </li>     
+
+              {{ pass }}
+              <li><a href="{{=URL('default','get_help')}}"><i class="fa fa-question"></i> <span>Help</span></a></li>
+              
+              {{pass}}
+            </ul>
+
+            {{ pass }}
+          </section>
+          <!-- /.sidebar -->
+        </aside>
+        
+        
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height: 1036px;">       
+            
+          
+          <section class="content-header">            
+            <h1>Human Resources Module</h1>
+          </section>        
+
+            {{block center}}  
+            
+            <!-- <div class="lv-bars lv-mid lg" data-label="Loading..."> -->
+            {{include}}
+            
+            {{end}}
+            
+        </div>
+        
+        
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+          <div class="pull-right hidden-xs">
+            <b>Version</b> 1.1.4
+          </div>
+          <strong>2018-{{=request.now.year}} <a href="#">Merch & Partners Co. WLL</a>.</strong> 
+        </footer>
+      
+
+        <!-- Add the sidebar's background. This div must be placed
+              immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+      </div>   
+    <!-- Navbar ======================================= -->
+    {{pass}}
+    <!-- The javascript =============================== --> 
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script src="{{=URL('static','js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{=URL('static','js/web2py-bootstrap4.js')}}"></script>
+    
+    <script src="{{=URL('static','dist/js/jquery.min.js')}}"></script>
+    <script src="{{=URL('static','dist/js/bootstrap.min.js')}}"></script>
+    <script src="{{=URL('static','dist/js/adminlte.min.js')}}"></script>
+    <script src="{{=URL('static','dist/js/demo.js')}}"></script>
+    <script src="{{=URL('static','dist/alertify/alertify.min.js')}}"></script>    
+    <!-- <script src="{{=URL('static','dist/bootstrap-table-master/dist/bootstrap-table.min.js')}}"></script>         -->
+       
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="https://cdn.datatables.net/rowreorder/1.2.7/js/dataTables.rowReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+           
+    
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script> 
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script> 
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
+    
+    {{block page_js}}{{end page_js}}
+    {{if response.google_analytics_id:}}
+    <!-- Analytics ==================================== -->
+    <script src="{{=URL('static','js/analytics.min.js')}}"></script>
+    <script type="text/javascript">
+      analytics.initialize({
+      'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'}
+      });
+    </script>
+    {{pass}}
+  </body>
+</html>

@@ -1,0 +1,64 @@
+{{extend 'layout.html'}}
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Salary Adjustment Grid</h3>       
+                    <div class="pull-right"><a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a></div>              
+                </div>
+                <div class="box-body">
+                    {{=table}}
+                </div>        
+                <div class="box-footer clearfix">
+                    {{ if auth.has_membership(role = 'HR MANAGER') | auth.has_membership(role = 'ADMINISTRATION MANAGER'): }}
+                        {{ if int(request.args(0)) == 1: }}
+                            <a href="{{=URL('leave_mngt','post_salary_adjustment')}}" type="button" class="btn btn-primary btn-flat pull-right">Place New Salary Adjustment</a>                    
+                        {{pass}}
+                    {{ pass }}
+                </div>                             
+            </div> 
+        </div>        
+    </div>
+</section>
+<script>
+$(document).ready(function(){
+    $(".table").DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                className: 'btn btn-default btn-flat',
+                text: '<i class="fa fa-table"></i> Excel',
+                title: 'Salary Adjustment Reports',
+                titleAttr: 'Export in Spreadsheet'
+            },
+            {
+                extend: 'pdf',
+                className: 'btn btn-default btn-flat',
+                text: '<i class="fa fa-file-pdf-o"></i> Pdf',
+                title: 'Salary Adjustment Reports',
+                titleAttr: 'Print',
+                exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5] 
+                }                
+            },            
+            {
+                extend: 'print',
+                className: 'btn btn-default btn-flat',
+                text: '<i class="fa fa-print"></i> Print',
+                title: 'Salary Adjustment Reports',
+                titleAttr: 'Print',
+                customize: function ( win ) {
+                    $(win.document.body)
+                        .css( 'font-size', '9pt' ) 
+                    $(win.document.body).find( 'table' )
+                        .addClass( 'compact' )
+                        .css( 'font-size', 'inherit' );
+                }                
+            },                   
+        ]                
+    });
+});
+</script>

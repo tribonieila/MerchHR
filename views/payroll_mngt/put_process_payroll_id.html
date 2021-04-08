@@ -1,0 +1,130 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Payroll Management<small>Update</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">       
+                    <div class="col-md-8">
+                        <h3 class="box-title">{{=_id.employee_id.first_name}} {{=_id.employee_id.middle_name}} {{=_id.employee_id.last_name}}</h3>  <small>{{=_id.employee_id}}</small>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                            </div>
+                            {{if not _range: }}
+                                <input type="text" class="form-control pull-right" readonly>
+                            {{ else: }}
+                                <input type="text" class="form-control pull-right" value = "{{=_range.start_transaction_date}} - {{=_range.end_transaction_date}}" readonly>
+                            {{ pass}}
+                        </div>                        
+                    </div>
+                    
+                </div>        
+            <div class="box-body">
+                {{=form.custom.begin}}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-horizontal">                        
+                            <div class="form-group">                            
+                                <label class="col-sm-6 control-label">Days Work</label>
+                                <div class="col-sm-3">{{=form.custom.widget.days_work}}</div>                          
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Basic Income</label>
+                                <div class="col-sm-6">{{=form.custom.widget.basic_income}}</div>
+                            </div>
+                            <div class="form-group">                            
+                                <label class="col-sm-6 control-label">Housing Allowances</label>
+                                <div class="col-sm-6">{{=form.custom.widget.housing_allowances}}</div>                          
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Car Allowances</label>
+                                <div class="col-sm-6">{{=form.custom.widget.car_allowances}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Petrol Allowances</label>
+                                <div class="col-sm-6">{{=form.custom.widget.petrol_allowances}}</div>
+                            </div>    
+                            <div class="form-group">                            
+                                <label class="col-sm-6 control-label">Food Allowances</label>
+                                <div class="col-sm-6">{{=form.custom.widget.food_allowances}}</div>                          
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Others</label>
+                                <div class="col-sm-6">{{=form.custom.widget.others}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Incentives</label>
+                                <div class="col-sm-6">{{=form.custom.widget.incentive}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Total Gross Pay</label>
+                                <div class="col-sm-6"><input type="number" class="form-control pull-right" id="total_gross_pay" name="total_gross_pay" value="{{=_id.total_gross_pay}}" readonly></div>                                
+                            </div>            
+                        </div>                                                         
+                    </div>                            
+                    <div class="col-md-4">
+                        <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">Loan or Advances</label>
+                            <div class="col-sm-6">{{=form.custom.widget.loan_or_advances}}</div>
+                        </div>                      
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">Other Deductions</label>
+                            <div class="col-sm-6">{{=form.custom.widget.other_deductions}}</div>
+                        </div>                      
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">Absent</label>
+                            <div class="col-sm-6">{{=form.custom.widget.absent_deductions}}</div>
+                        </div>                      
+                        <div class="form-group">
+                            <label class="col-sm-6 control-label">Total Deductions</label>
+                            <div class="col-sm-6"><input type="text" class="form-control pull-right" id="total_deductions" name="total_deductions" value="{{=_id.total_deductions}}" readonly></div>                            
+                        </div>
+                    </div>                
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Bank Transfer</label>
+                                <div class="col-sm-6"><input type="text" class="form-control pull-right" id="bank_transfer" name="bank_transfer" value="{{=_id.bank_transfer}}" readonly></div>
+                            </div>                      
+            
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Net Pay</label>
+                                <div class="col-sm-6"><input type="text" class="form-control pull-right" id="bank_transfer" name="bank_transfer" value="{{=_id.net_pay}}" readonly></div>
+                            </div>                      
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">            
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Remarks</label>
+                                <div class="col-sm-8">{{=form.custom.widget.remarks}}</div>
+                            </div> 
+                            <div class="form-group">
+                                <div class="col-sm-4"></div>
+                                <div class="col-sm-8">{{=form.custom.submit}}   </div>
+                            </div>                      
+                                 
+                        </div>        
+                    </div>
+                </div>
+                {{=form.custom.end}}
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){
+    
+})
+</script>

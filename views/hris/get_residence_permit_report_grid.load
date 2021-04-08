@@ -1,0 +1,24 @@
+<div id="restoolbar"> 
+    <input type="button" id="btnResUpdate" class="btn btn-success btn-flat" value="Update Date">              
+    <input type="button" id="btnResPrint" class="btn btn-warning btn-flat" value="Print">              
+</div>    
+{{=table}}
+<script>
+    $("#btnResUpdate").click(function(){        
+        alertify.confirm('Reports', 'Update expired date?', 
+            function(){                 
+                ajax('{{=URL('hris','put_residence_permit_report_grid')}}', ['ctr','residence_no_date_expiration']),
+                alertify.success('Updated') 
+                window.location.reload();
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnResPrint").click(function(){        
+        alertify.confirm('Reports', 'Print expired date?', 
+            function(){                            
+                window.open('{{=URL('hris_reports','get_cards_report', args = 1, extension = False)}}'),
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });    
+</script>

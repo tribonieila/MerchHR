@@ -1,0 +1,166 @@
+{{extend 'layout.html'}}
+{{ from datetime import date, datetime, timedelta }}
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form</h3>
+                    <div class="pull-right"><a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a></div>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">                        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Transaction No.</label>                            
+                            <div class="col-sm-2"><input class="form-control" id="transaction_no" name="transaction_no" type="text" value="{{=_row.transaction_no}}" readonly></div>                            
+                            <label class="col-sm-4 control-label">Transaction Date</label>
+                            <div class="col-sm-2"><input class="form-control" id="transaction_date" name="transaction_date" type="text" value="{{=_row.transaction_date}}" readonly></div>
+                        </div>                   
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label>
+                            <div class="col-sm-4"><input class="form-control" id="employee_id" name="employee_id" type="text" value="{{=_row.employee_id.title + _row.employee_id.first_name + ' ' +_row.employee_id.last_name}}" readonly></div>    
+                            <label class="col-sm-2 control-label">Effective Date</label>
+                            <div class="col-sm-2"><input class="form-control" id="effectivity_date" name="effectivity_date" type="text" value="{{=_row.effectivity_date}}" readonly></div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Basic Income</label>
+                            <div class="col-sm-2"><input class="form-control" id="basic_income" name="basic_income" type="text" value="{{=_row.basic_income}}" readonly></div>
+                            <label class="col-sm-1">Adjustment Type</label>
+                            <div class="col-sm-1">
+                                <input class="form-control" id="adjustment_type" name="adjustment_type" type="text" value="{{=_row.adjustment_type}}" readonly>                                
+                            </div>
+                            <label class="col-sm-2 control-label">Housing Allowances</label>
+                            <div class="col-sm-2"><input class="form-control" id="housing_allowances" name="housing_allowances" type="text" value="{{=_row.housing_allowances}}" readonly></div>                              
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Car Allowances</label>
+                            <div class="col-sm-2"><input class="form-control" id="car_allowances" name="car_allowances" type="text" value="{{=_row.car_allowances}}" readonly></div>                            
+                            <label class="col-sm-4 control-label">Petrol Allowances</label>
+                            <div class="col-sm-2"><input class="form-control" id="petrol_allowances" name="petrol_allowances" type="text" value="{{=_row.petrol_allowances}}" readonly></div>                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Food Allowances</label>
+                            <div class="col-sm-2"><input class="form-control" id="food_allowances" name="food_allowances" type="text" value="{{=_row.food_allowances}}" readonly></div>        
+                            <label class="col-sm-4 control-label">Others</label>
+                            <div class="col-sm-2"><input class="form-control" id="others" name="others" type="text" value="{{=_row.others}}" readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Incentives</label>
+                            <div class="col-sm-2"><input class="form-control" id="incentive" name="incentive" type="text" value="{{=_row.incentive}}" readonly></div>        
+                            <label class="col-sm-4 control-label">Mobile Allowances</label>
+                            <div class="col-sm-2"><input class="form-control" id="mobile_allowances" name="mobile_allowances" type="text" value="{{=_row.mobile_allowances}}" readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4">
+                                <textarea class="form-control" rows="4" cols="50" readonly>{{=_row.remarks}}</textarea>
+                                <!-- <input class="form-control" id="remarks" name="remarks" rows = "2" type="textarea" value="{{=_row.remarks}}" readonly> -->
+                            </div>        
+                            <label class="col-sm-2 control-label">Status</label>
+                            <div class="col-sm-4"><input class="form-control" id="status_id" name="status_id" type="text" value="{{=_row.status_id.status}}" readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">HR Remarks</label>
+                            <div class="col-sm-4">
+                                {{ if auth.has_membership(role = 'HR MANAGER'):}}
+                                    <div class="input-group">
+                                        <textarea class="form-control" id="hr_remarks" name="hr_remarks" rows="4" cols="50">{{=_row.hr_remarks}}</textarea>
+                                        <!-- <input class="form-control" id="hr_remarks" name="hr_remarks" type="text" placeholder="type your remarks here..." value="{{=_row.hr_remarks}}"> -->
+                                        <span class="input-group-addon btn btn-primary" id="btnHRRemarks">Send</span>
+                                    </div>                                                                        
+                                {{ else: }}
+                                    <textarea class="form-control" id="hr_remarks" name="hr_remarks" rows="4" cols="50" readonly>{{=_row.hr_remarks}}</textarea>
+                                    <!-- <input class="form-control" id="hr_remarks" name="hr_remarks" type="text" value="{{=_row.hr_remarks}}" readonly> -->
+                                {{ pass }}
+                            </div>        
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                {{ if auth.has_membership(role = 'HR MANAGER'):}}
+                                    {{ if _row.status_id == 1: }}
+                                        <input class="btn btn-success btn-flat" type="button" value="Approved" id="btnApproved">
+                                        <input class="btn btn-danger btn-flat" type="button" value="Reject" id="btnReject">
+                                    {{ else: }}
+                                        <input class="btn btn-success btn-flat" type="button" value="Approved" id="btnApproved" disabled = "True">
+                                        <input class="btn btn-danger btn-flat" type="button" value="Reject" id="btnReject" disabled = "True">
+                                    {{ pass }}
+                                {{ elif auth.has_membership(role = 'MANAGEMENT'): }}
+                                    {{ if _row.status_id == 3: }}
+                                        <input class="btn btn-success btn-flat" type="button" value="Approved" id="btnMngtApproved">
+                                        <input class="btn btn-danger btn-flat" type="button" value="Reject" id="btnReject">
+                                    {{ else: }}
+                                        <input class="btn btn-success btn-flat" type="button" value="Approved" id="btnApproved" disabled = "True">
+                                        <input class="btn btn-danger btn-flat" type="button" value="Reject" id="btnReject" disabled = "True">
+                                    {{ pass }}                                
+                                {{ pass }}
+                                <input class="btn btn-warning btn-flat" type="button" value="Close" id="btnAbort">
+                                <input class="btn btn-info btn-flat" type="button" value="Salary Adjustment" id="btnSalHistory">
+                            </div>                            
+
+                        </div>
+                        <div class="form-group">                        
+                            <label class="col-sm-2 control-label">Mngt Remarks</label>
+                            <div class="col-sm-4">
+                                {{ if auth.has_membership(role = 'MANAGEMENT'): }}
+                                    <div class="input-group">
+                                        <!-- <textarea class="form-control" id="mngt_remarks" name="mngt_remarks" rows="4" cols="50" readonly>"{{=_row.mngt_remarks}}"</textarea> -->
+                                        <input class="form-control" id="mngt_remarks" name="mngt_remarks" type="text" placeholder="type your remarks here..." value="{{=_row.mngt_remarks}}">
+                                        <span class="input-group-addon btn btn-primary" id="btnMngtRemarks">Save</span>
+                                    </div>                                    
+                                {{ else: }}
+                                    <textarea class="form-control" id="mngt_remarks" name="mngt_remarks" rows="4" cols="50" readonly>{{=_row.mngt_remarks}}</textarea>
+                                    <!-- <input class="form-control" id="mngt_remarks" name="mngt_remarks" type="text" value="{{=_row.mngt_remarks}}" readonly> -->
+                                {{ pass }}
+                            </div>                            
+                        </div>                        
+                    </div>                    
+                </div>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){    
+    $("#btnHRRemarks").click(function(){        
+        ajax("{{=URL('leave_mngt','put_salary_adjustment_hr_remarks_id', args = request.args(0))}}", ['hr_remarks'])
+    });
+    
+    $("#btnMngtRemarks").click(function(){        
+        ajax("{{=URL('leave_mngt','put_salary_adjustment_mngt_remarks_id', args = request.args(0))}}", ['mngt_remarks'])
+    });
+
+    $("#Salary_Adjustment_employee_id").change(function(){    
+        ajax("{{=URL('leave_mngt','get_salary_details_id')}}", ['employee_id'])
+    });
+    $("#btnMngtApproved").click(function(){
+        alertify.confirm('Salary Adjustment', 'Confirm Adjustment?', 
+            function(){ 
+                ajax("{{=URL('leave_mngt','put_salary_adjustment_confirmation_id', args = request.args(0))}}", ['mngt_remarks'])
+                $(location).attr('href',"{{=URL('leave_mngt','get_salary_adjustment_grid', args = 1)}}");
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+
+    $("#btnReject").click(function(){
+        alertify.confirm('Salary Adjustment', 'Reject Adjustment?', 
+            function(){ 
+                ajax("{{=URL('leave_mngt','put_salary_adjustment_rejection_id', args = request.args(0))}}", ['hr_remarks', 'mngt_remarks'])
+                alertify.success('Ok') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    
+    $("#btnAbort").click(function(){
+        window.location.replace("{{=URL('leave_mngt','get_salary_adjustment_grid', args = 1)}}")
+    });
+
+    $("#btnSalHistory").click(function(){
+        alertify.alert().set({'startMaximized':true, 'title':'Salary Adjustment','message':'{{=LOAD('leave_mngt','get_salary_adjustment_history_load_id', args = request.args(0))}}'}).show();       
+    })
+});
+</script>
+

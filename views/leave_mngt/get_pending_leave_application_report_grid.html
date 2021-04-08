@@ -1,0 +1,62 @@
+{{extend 'layout.html'}}
+<style>
+    #toolbar {
+      margin: 0;
+    }
+    </style>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Pending Leave Application Reports</h3>
+                </div>
+
+                <div class="box-body">                     
+                    <!-- <div class="toolbar">
+                        <button type="button" class="btn btn-default btn-flat" id="btnPrint"><i class="fa fa-print"></i> Print</button>                        
+                    </div>                             -->
+
+                    {{=table}}
+                </div>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#btnPrint").click(function(){
+        console.log('Print');
+        alertify.success('Print');
+        window.open("{{=URL('leave_mngt_reports','get_pending_leave_application_report', args = 1)}}")
+    });
+    
+    $(".table").DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                className: 'btn btn-default btn-flat',
+                text: '<i class="fa fa-table"></i> Excel',
+                title: 'Pending Leave Application Reports',
+                titleAttr: 'Export in Spreadsheet'
+            },
+            {
+                extend: 'print',
+                className: 'btn btn-default btn-flat',
+                text: '<i class="fa fa-print"></i> Print',
+                title: 'Pending Leave Application',
+                titleAttr: 'Print',
+                customize: function ( win ) {
+                    $(win.document.body)
+                        .css( 'font-size', '9pt' ) 
+                    $(win.document.body).find( 'table' )
+                        .addClass( 'compact' )
+                        .css( 'font-size', 'inherit' );
+                }                
+            },                   
+        ]        
+    });
+});
+</script>

@@ -1,0 +1,47 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Leave & Absent Management<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        {{=form.custom.begin}}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Application Date</label>
+                            <div class="col-sm-4">{{=form.custom.widget.application_date}}</div>
+                            <label class="col-sm-2 control-label">Effective Date</label>
+                            <div class="col-sm-4">{{=form.custom.widget.effective_date}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label>
+                            <div class="col-sm-4">{{=form.custom.widget.employee_id}}</div>    
+                            <label class="col-sm-2 control-label">Replacement</label>
+                            <div class="col-sm-4">{{=form.custom.widget.replacement}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Duration Leave</label>
+                            <div class="col-sm-2">{{=form.custom.widget.duration_leave}}</div>    
+                            <label class="col-sm-4 control-label">Status</label>
+                            <div class="col-sm-4">{{=form.custom.widget.status_id}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>    
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4"><input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
+                            </div>
+                        </div>
+            
+                        {{=form.custom.end}}        
+                    </div>                    
+                </div>
+            </div>
+        </div>        
+    </div>
+</section>

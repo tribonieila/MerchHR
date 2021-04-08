@@ -1,0 +1,24 @@
+<div id="pastoolbar">
+    <input type="button" id="btnPassUpdate" class="btn btn-success btn-flat" value="Update Date">              
+    <input type="button" id="btnPassPrint" class="btn btn-warning btn-flat" value="Print">              
+</div>    
+{{=table}}
+<script>
+    $("#btnPassUpdate").click(function(){        
+        alertify.confirm('Reports', 'Update expired date?', 
+            function(){                 
+                ajax('{{=URL('hris','put_passport_report_grid')}}', ['pas','passport_date_expiration']),
+                alertify.success('Updated') 
+                window.location.reload();
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnPassPrint").click(function(){        
+        alertify.confirm('Reports', 'Print expired date?', 
+            function(){                            
+                window.open('{{=URL('hris_reports','get_cards_report', args = 3, extension = False)}}'),
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });      
+</script>

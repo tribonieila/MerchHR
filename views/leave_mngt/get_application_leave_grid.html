@@ -1,0 +1,107 @@
+{{extend 'layout.html'}}
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Employee Self-Service<small>Grid</small></h3>       
+                    <div class="pull-right"><a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a></div>              
+                </div>
+                <div class="box-body">
+                    {{=table}}
+                </div>        
+                <div class="box-footer clearfix">
+                    <a href="{{=URL('leave_mngt','post_application_leave')}}" type="button" class="btn btn-primary btn-flat pull-right">Place New Application</a>                                
+                </div>                             
+            </div> 
+        </div>        
+    </div>
+</section>
+
+
+    
+<div style="display:none;" >
+    <div id="dlgContent">
+        <div class="row">
+            <div class="col-md-6">
+                <label> Return Date </label>
+                <input class="form-control datepicker" id="date_returned" name="date_returned" type="date" value={{=request.now}}/> 
+            </div>        
+            <div class="col-md-6">
+                <label> Kindly define your reason. </label>
+                <input class="form-control" id="return_justification" name="return_justification" type="text" value="None" />
+            </div>
+        </div>
+       
+    </div>
+</div>
+<script>       
+
+    $(document).ready(function(){
+        var _today = $("#date_returned").val();        
+        $("#date_returned").val("{{=request.now}}");
+        $(".table").DataTable({
+            responsive: true
+        });
+    });
+  
+
+</script>
+<script>  
+
+    var dlgContentHTML = $('#dlgContent').html();
+    $('#dlgContent').html("");     
+    function late_returnedy() {
+        alertify.genericDialog || alertify.dialog('genericDialog',function(){
+            return {
+                main:function(content){
+                    this.setContent(content);
+                },
+                setup:function(){
+                    return {
+                        focus:{
+                            element:function(){
+                                return this.elements.body.querySelector(this.get('selector'));
+                            },
+                            select:true
+                        },
+                        options:{
+                            basic:true,
+                            maximizable:false,
+                            resizable:false,
+                            padding:false
+                        }
+                    };
+                },
+                settings:{
+                    selector:undefined
+                }
+            };
+        });
+        //force focusing password box
+        alertify.genericDialog ($('#loginForm')[0]).set('selector', 'input[type="password"]');
+    }
+    function late_returnedx(){
+        var _date_returned = $('#date_returned').val();
+        var _return_justification = $('#return_justification').val();
+        alertify.confirm('a callback will be invoked on ok.').set('onok', function(closeEvent){ alertify.success('Ok');} ); 
+        // alertify.confirm('Confirm Message', function(){ alertify.success('Ok') }, function(){ alertify.error('Cancel')});
+
+    }
+    function late_returned(){
+        alertify.confirm(dlgContentHTML).set('onok', function(evt, value) { 
+					var _date_returned = $('#date_returned').val();
+					var _return_justification = $('#return_justification').val();
+					/* Insert your code to work with the two values */ 		
+                    
+                    // alertify.success('success!');
+                    alertify.success('Success! ', ajax("{{=URL("leave_mngt","put_return_application_id")}}" + "/" + _return_justification + "/" +  _date_returned ))                   
+                    window.location="{{=URL('leave_mngt','get_application_leave_grid')}}"
+
+				}, function(){ alertify.error('Canceled');}
+
+                ).set('title',"Joining Report Form");    
+    }
+    
+</script>

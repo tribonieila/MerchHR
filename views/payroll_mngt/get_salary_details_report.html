@@ -1,0 +1,40 @@
+{{extend 'layout.html'}}
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<!-- <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/extensions/export/bootstrap-table-export.min.js"></script> -->
+
+<section class="content-header">
+    <h1>Payroll Management<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Salary Details</h3>
+                </div>
+                <div class="box-body">
+                    <div id="toolbar">
+                        <button id="btnExport" class="btn btn-success btn-flat">Export Excel</button>
+                    </div>
+                    {{=table}}
+                </div>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<script>
+// $(document).ready(function(){
+//     var $table = $("#tblPayrollDet");
+// 	$('#btnExport').click(function () {
+//         $table.tableExport({
+//             type: 'excel',
+//             escape: false
+//         });
+//     });
+// });
+
+</script>

@@ -1,0 +1,132 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="box box-widget widget-user-2">                
+                <div class="widget-user-header bg-yellow">
+                    <!-- <div class="widget-user-image">
+                    <img class="img-circle" src="../dist/img/user7-128x128.jpg" alt="User Avatar">
+                    </div> -->
+                    <!-- /.widget-user-image -->
+                    <h3 class="widget-user-username">{{=_id.employee_id.first_name}} {{=_id.employee_id.middle_name}} {{=_id.employee_id.last_name}}</h3>
+                    <h5 class="widget-user-desc">{{=_ei.designation_code_id.designation_name}}</h5>
+                </div>
+                <div class="box-footer">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Transaction No.</label>                            
+                            <div class="col-sm-3"><input class="form-control" value="{{=_id.transaction_no}}" readonly></div>                            
+                            <label class="col-sm-3 control-label">Transaction Date</label>
+                            <div class="col-sm-3"><input class="form-control" value="{{=_id.application_date}}" readonly></div>
+                        </div>    
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Type of Leave</label>
+                            <div class="col-sm-3"><input class="form-control" value="{{=_id.type_of_leave_id.type_of_leave}}" readonly></div>
+                            <label class="col-sm-3 control-label">Duration</label>
+                            <div class="col-sm-3"><input class="form-control" value="{{=_id.duration_leave}}" readonly></div>                              
+                        </div>                 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Replacement</label>
+                            {{ if _id.replacement== None: }}
+                                <div class="col-sm-9"><input class="form-control" value="None" readonly></div>
+                            {{ else: }}
+                                <div class="col-sm-9"><input class="form-control" value="{{=_id.replacement.first_name}} {{=_id.replacement.middle_name}} {{=_id.replacement.last_name}}" readonly></div>
+                            {{ pass }}
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Effective Date</label>
+                            <div class="col-sm-4"><input class="form-control" value="{{=_id.from_effective_date}}" readonly></div>
+                            <div class="col-sm-4"><input class="form-control" value="{{=_id.to_effective_date}}" readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Remarks</label>
+                            <div class="col-sm-9"><input class="form-control" value="{{=_id.remarks}}" readonly></div>        
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Status</label>
+                            <div class="col-sm-9"><input class="form-control" value="{{=_id.status_id.status}}" readonly></div>
+                        </div>                        
+                        <div class="form-group">
+                            
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-9">                                
+                                <input class="btn btn-success btn-flat" id="btnSettled" type="button" value="Settled" onclick="ajax('{{=URL('leave_mngt','put_application_leave_account_id_approved', args = request.args(0))}}')">
+                                <input class="btn btn-warning btn-flat" id="btnOnHold" type="button" value="On-Hold" onclick="ajax('{{=URL('leave_mngt','put_application_leave_account_id_rejected', args = request.args(0))}}')">
+                                <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}">
+                            </div>
+                        </div>                                  
+                    </div>
+
+                </div>
+            </div>   
+        </div>
+        <div class="col-md-6">            
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image"> -->
+                        <span class="username"><a href="#">Leave Salary Slip</a></span>
+                        <span class="description">Year {{=request.now.year}}</span>
+                    </div>
+
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" data-original-title="Mark as read">
+                        <i class="fa fa-circle-o"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+
+                    </div>
+                
+                </div>
+                
+                <div class="box-body">
+                    <table>
+                        <tr><td></td></tr>
+                    </table>
+                    {{=form.custom.begin}}
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Leave Salary</label>
+                            <div class="col-sm-10">
+                              {{=form.custom.widget.leave_salary}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Salary</label>
+                            <div class="col-sm-10">
+                                {{=form.custom.widget.leave_salary}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Net Total</label>
+                            <div class="col-sm-10">
+                                {{=form.custom.widget.total_salary}}
+                            </div>
+                        </div>    
+                        <div class="form-group">
+                            <div class="col-sm-10"></div>
+                            <div class="col-sm-2">{{=form.custom.submit}}</div>
+                        </div>
+                        
+                    </div>
+                    {{=form.custom.end}}
+                </div>
+            </div>
+        </div>            
+    </div>               
+</section>
+
+<script>
+$(document).ready(function(){
+    $("#btnSettled").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}"
+    });
+    $("#btnOnHold").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}"
+    });
+
+});
+</script>

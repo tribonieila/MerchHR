@@ -1,0 +1,24 @@
+<div id="dritoolbar">
+    <input type="button" id="btnDriUpdate" class="btn btn-success btn-flat" value="Update Date">              
+    <input type="button" id="btnDriPrint" class="btn btn-warning btn-flat" value="Print">              
+</div>    
+{{=table}}
+<script>
+    $("#btnDriUpdate").click(function(){         
+        alertify.confirm('Reports', 'Update expired date?', 
+            function(){                 
+                ajax('{{=URL('hris','put_drivers_license_report_grid')}}', ['dri','driver_license_no_expiration_date']),
+                alertify.success('Updated') 
+                window.location.reload();
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnDriPrint").click(function(){        
+        alertify.confirm('Reports', 'Print expired date?', 
+            function(){                            
+                window.open('{{=URL('hris_reports','get_cards_report', args = 2, extension = False)}}'),
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });      
+</script>

@@ -1,0 +1,98 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.css" />  
+<style>
+body {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.calendar {
+    display:block!important;
+    border: none;    
+}  
+
+.event-tooltip-content {
+    font-size: 15px;
+    padding: 5px;
+}
+
+.event-tooltip-content:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}    
+</style>
+
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Leave Chart</h3>
+                </div>
+                <div class="box-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>    
+</section>
+
+<script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>    
+<script src="https://unpkg.com/tippy.js@4"></script>       
+<script src="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.js"></script>    
+
+<script>
+let calendar = null;
+let tooltip = null;
+
+$(function() {
+    var currentYear = new Date().getFullYear();
+
+    calendar = new Calendar('#calendar', { 
+        mouseOnDay: function(e) {                                    
+            if(e.events.length > 0) {
+                var content = '';                
+                for(var i in e.events) {
+                    
+                    content += '<div class="event-tooltip-content">'
+                                    + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+                                    + '<div class="event-location">' + e.events[i].designation + '</div>'
+                                + '</div>';                    
+                }            
+                if(tooltip != null){
+                    tooltip.destroy();
+                    tooltip = null;
+                }
+
+                tooltip = tippy(e.element, {
+                    placement: 'right',
+                    content: content,
+                    animateFill: false,
+                    animation: 'shift-away',
+                    arrow: true
+                });
+                tooltip.show();
+            }
+        },
+        mouseOutDay: function(){
+            if (tooltip !== null) {
+                tooltip.destroy();
+                tooltip = null;
+            }
+        },        
+        dataSource: [
+        {{ for n in db(db.Employee_Leave_Chart_Temporary.sub_department_id == _row.manager_assigned).select(db.Employee_Leave_Chart_Temporary.ALL, db.Employee_Employment_Details.ALL, left = db.Employee_Employment_Details.on(db.Employee_Employment_Details.employee_id == db.Employee_Leave_Chart_Temporary.employee_id)): }}
+            {
+                id: {{ =n.Employee_Leave_Chart_Temporary.id }},
+                name: '{{=n.Employee_Leave_Chart_Temporary.employee_id.title}} {{ =n.Employee_Leave_Chart_Temporary.employee_id.first_name }} {{ =n.Employee_Leave_Chart_Temporary.employee_id.last_name }}',
+                designation: '{{=n.Employee_Employment_Details.designation_code_id.designation_name}}',
+                startDate: new Date( {{ =n.Employee_Leave_Chart_Temporary.from_effective_date.strftime("%Y, %m, %d")}} ),
+                endDate: new Date( {{=n.Employee_Leave_Chart_Temporary.to_effective_date.strftime("%Y, %m, %d")}} ),
+            },
+        {{ pass }}
+        ]        
+    });
+    
+});
+</script>

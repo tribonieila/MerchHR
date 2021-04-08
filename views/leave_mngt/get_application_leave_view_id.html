@@ -1,0 +1,49 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Leave & Absent Management<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Application Date</label>
+                            <div class="col-sm-4"><input text="date" class="form-control" value="{{=_id.application_date}}" readonly></div>
+                            <label class="col-sm-2 control-label">Effective Date</label>
+                            <div class="col-sm-4"><input text="date" class="form-control" value="{{=_id.effective_date}}" readonly></div>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.employee_id.first_name}} {{=_id.employee_id.middle_name}} {{=_id.employee_id.last_name}}" readonly></div>                                                        
+                            <label class="col-sm-2 control-label">Replacement</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.replacement.first_name}} {{=_id.replacement.middle_name}} {{=_id.replacement.last_name}}" readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Duration Leave</label>
+                            <div class="col-sm-2"><input text="number" class="form-control" value="{{=_id.duration_leave}}" readonly></div>                                                        
+                            <label class="col-sm-4 control-label">Status</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.status_id.status}}" readonly></div>                            
+                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.remarks}}" readonly></div>                                                        
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4"><input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_leave_grid', args = 2)}}">
+                            </div>
+                        </div>
+            
+                        
+                    </div>                    
+                </div>
+            </div>
+        </div>        
+    </div>
+</section>

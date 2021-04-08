@@ -1,0 +1,136 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','dist/bower_components/bootstrap-daterangepicker/daterangepicker.css')}}"/>
+<script src="{{=URL('static','dist/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header with-border">
+            <div class="col-md-8">
+                <h3 class="box-title">Run Payroll</h3>
+            </div>
+            <div class="col-md-4">
+                
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                        </div>
+                        {{if not _range: }}
+                            <input type="text" class="form-control pull-right" readonly>
+                        {{ else: }}
+                            <input type="text" class="form-control pull-right" value = "{{=_range.start_transaction_date}} - {{=_range.end_transaction_date}}" readonly>
+                        {{ pass}}
+                    </div>
+                
+            
+            </div>
+            
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            <div id="toolbar">                   
+                <div class="btn-group">
+                    <button id="btnProcess" data-toggle="modal" data-target="#modal-default" class="btn btn-info btn-flat">Process</button>
+                    <button id="btnRedo" class="btn btn-danger btn-flat">Redo</button>
+                    <button id="btnSubmit" class="btn btn-success btn-flat">Submit</button>
+                </div>
+            </div>
+            {{=table}}
+
+        </div>
+        <!-- <div class="box-footer clearfix"> -->
+            <!-- <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a> -->
+            <!-- <a href="{{=URL('hris','post_employee_master')}}" class="btn btn-primary btn-flat pull-right">Place New Employee</a> -->
+        <!-- </div> -->
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+  </div>
+</section>
+<div class="modal fade" id="modal-default" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">Payroll Form</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <form>
+                    <div class="col-md-12">       
+                        <div class="form-group">
+                            <label>For the Month</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <select class="form-control" name="month">
+                                    <option value="">Select Month</option>
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>            
+                                </select>
+                            </div>
+                        </div>                         
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="btnCancel" class="btn btn-default pull-left btn-flat" data-dismiss="modal">Close</button>
+            <button type="submit" id="btnProcess" class="btn btn-primary btn-flat" onclick="PopulateAddModal()">Save</button>
+        </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- context menu -->
+
+
+<script> 
+$(document).ready( function () {
+    
+    // $('#btnRedo, #btnSubmit').attr("disabled","disabled");
+    $('#btnRedo').click(function(){
+        ajax("{{=URL('payroll_mngt','push_payroll_redo')}}")
+        location.reload()
+    });
+
+    var per = document.querySelectorAll('.personal_note')    
+    for (var i = 0; i < per.length; i++){
+
+        per[i].addEventListener('click', function(){
+        console.log('hey');
+        })
+    }    
+    $('.table').bootstrapTable();
+});
+
+    function PopulateAddModal() {
+        // $('#btnRedo, #btnSubmit').removeAttr('disabled');
+        // $("#btnProcess").attr("disabled","disabled");        
+        ajax("{{=URL('payroll_mngt','push_payroll_run')}}",['month'])        
+        location.reload();
+    }      
+
+    var onShowFiltersDialog = function() {
+        $('#filters-dialog').modal('show');
+    };
+
+    function personal_note(x){
+        var y = document.getElementsByName('personal_note');
+        console.log(y);
+    }
+</script>

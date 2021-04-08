@@ -1,0 +1,242 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','dist/css/bootstrap-year-calendar.min.css')}}"/>
+
+<section class="content">
+    <div data-provide="calendar"></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Employee Self-Service <small>Form</small></h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">             
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Transaction No.</label>                            
+                            <div class="col-sm-2"><input class="form-control" type="text" value="{{=_row.transaction_no}}" readonly></div>                            
+                            <label class="col-sm-4 control-label">Transaction Date</label>
+                            <div class="col-sm-2"><input class="form-control" type="text" value="{{=_row.application_date}}" readonly></div>
+                        </div>                       
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label> 
+                            <div class="col-sm-4">
+                                <input type="hidden" class="form-control" name="employee_id" value="{{=_row.employee_id}}"> 
+                                <input text="text" class="form-control" value="{{=_row.employee_id.first_name}} {{=_row.employee_id.middle_name}} {{=_row.employee_id.last_name}}" readonly></div>                                                        
+                            <label class="col-sm-2 control-label">Replacement</label>
+                            {{ if not _row.replacement: }}
+                                <div class="col-sm-4"><input text="text" class="form-control" value="None" readonly></div>
+                            {{ else: }}
+                                <div class="col-sm-4"><input text="text" class="form-control" value="{{=_row.replacement.first_name}} {{=_row.replacement.middle_name}} {{=_row.replacement.last_name}}" readonly></div>
+                            {{ pass }}     
+                        </div>
+        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Type of Leave</label>
+                            <div class="col-sm-2"><input text="text" class="form-control" value="{{=_row.type_of_leave_id.type_of_leave}}" readonly></div>
+                            <div class="col-sm-2">
+                                {{ if _row.type_of_leave_id == 3: }}
+                                    {{ if _row.medical_file == '': }}
+                                        <a class="btn btn-default btn-flat disabled"><i class="fa fa-user-md"></i> No Medical Certificate</a>
+                                    {{ else: }}
+                                        <a class="btn btn-default btn-flat" onclick='window.open("{{=URL("default", "download", args=_row.medical_file)}}", ""); return false;' href="javascript:void(0);"><i class="fa fa-user-md"></i> With Medical Certificate</a>
+                                    {{ pass }}                                    
+                                {{ pass }}
+                                {{ if _row.type_of_leave_id == 6: }}
+                                    {{ if _row.maternity_file == '': }}
+                                        <a class="btn btn-default btn-flat disabled"><i class="fa fa-user-md"></i> No Maternity Certificate</a>                                        
+                                    {{ else: }}
+                                        <a class="btn btn-default btn-flat" onclick='window.open("{{=URL("default", "download", args=_row.maternity_file)}}", ""); return false;' href="javascript:void(0);"><i class="fa fa-user-md"></i> With Maternity Certificate</a>                                                                                
+                                    {{ pass }}                                    
+                                {{ pass }}
+
+                            </div>
+                            <label class="col-sm-2 control-label">Duration</label>{{ import locale}}                    
+                            <div class="col-sm-2"><input text="text" class="form-control" value="{{=locale.format('%.1f',_row.duration_leave or 0, grouping = True)}}" readonly></div>
+        
+                        </div>                                
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">From</label>
+                            {{ if not _row.from_effective_date: }}
+                            {{ _from_date = 'None'}}
+                            {{ else: }}
+                            {{ _from_date = _row.from_effective_date.strftime('%d-%b-%Y')}}
+                            {{ pass }}
+                            <div class="col-sm-2"><input text="date" class="form-control" value="{{=_from_date}}" readonly></div>
+                            <label class="col-sm-4 control-label">To</label>
+                            <div class="col-sm-2"><input text="date" class="form-control" value="{{=_row.to_effective_date.strftime('%d-%b-%Y')}}" readonly></div>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_row.remarks}}" readonly></div>
+                            <label class="col-sm-2 control-label">Status</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_row.status_id.status}}" readonly></div>                            
+                            
+                        </div>
+        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Dept. Remarks</label>
+                            <div class="col-sm-4">
+                                {{ if _row.status_id == 1: }}              
+                                    <div class="input-group">                                
+                                        <input text="text" class="form-control" name="dept_remarks" placeholder="type your remarks here..."  value="{{=_row.dept_remarks}}">
+                                        <span class="input-group-addon btn btn-primary" id="btnDeptRemarks">Send</span>
+                                    </div>
+                                {{ else: }}
+                                    <input text="text" class="form-control" name="dept_remarks" placeholder="type your remarks here..."  value="{{=_row.dept_remarks}}" readonly>
+                                {{ pass }}
+                            </div>
+                            <label class="col-sm-2 control-label"></label>
+
+                            <div class="col-sm-4">
+                                {{ if auth.has_membership(role = 'MANAGEMENT'): }}
+                                    {{ if _row.status_id >= 9: }}
+                                        <input class="btn btn-success btn-flat" id="mngr_approved" type="button" value="Approved" disabled = "True" onclick="ajax('{{=URL('leave_mngt','get_application_mngt_leave_id_approved', args = request.args(0))}}')">
+                                        <input class="btn btn-warning btn-flat" id="mngr_rejected" type="button" value="Reject" disabled = "True" onclick="ajax('{{=URL('leave_mngt','get_application_mngt_leave_id_rejected', args = request.args(0))}}')">
+                                        <!-- <input class="btn btn-info btn-flat" type="button" value="Leave Chart" id="btnChart"> -->
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid', extension = False)}}">
+                                    {{ else: }}
+                                        <input class="btn btn-success btn-flat" id="mngr_approved" type="button" value="Approved" onclick="ajax('{{=URL('leave_mngt','get_application_mngt_leave_id_approved', args = request.args(0))}}')">
+                                        <input class="btn btn-warning btn-flat" id="mngr_rejected" type="button" value="Reject" onclick="ajax('{{=URL('leave_mngt','get_application_mngt_leave_id_rejected', args = request.args(0))}}')">
+                                        <!-- <input class="btn btn-info btn-flat" type="button" value="Leave Chart" id="btnChart"> -->
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid', extension = False)}}">
+                                    {{ pass }}
+                                {{ elif auth.has_membership(role = 'ACCOUNTS'): }}
+                                    {{ if _row.status_id == 10: }}
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_leave_account_grid', extension = False)}}">
+                                    {{ else: }}
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_report_grid', extension = False)}}">
+                                    {{ pass }}
+                                {{ elif auth.has_membership(role = 'HR MANAGER'): }}
+                                    {{ if _row.status_id > 5: }}
+                                    <input class="btn btn-success btn-flat" id="hr_approved" type="button" value="Approved" disabled = "True" onclick="ajax('{{=URL('leave_mngt','put_application_hr_leave_id_approved', args = request.args(0))}}')">
+                                    <input class="btn btn-warning btn-flat" id="hr_rejected" type="button" value="Reject" disabled = "True" onclick="ajax('{{=URL('leave_mngt','put_application_hr_leave_id_rejected', args = request.args(0))}}')">
+                                    
+                                    <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('default','#', extension = False)}}">
+                                    {{ else: }}
+                                    <input class="btn btn-success btn-flat" id="hr_approved" type="button" value="Approved" onclick="ajax('{{=URL('leave_mngt','put_application_hr_leave_id_approved', args = request.args(0))}}')">
+                                    <input class="btn btn-warning btn-flat" id="hr_rejected" type="button" value="Reject" onclick="ajax('{{=URL('leave_mngt','put_application_hr_leave_id_rejected', args = request.args(0))}}')">
+                                    
+                                    <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('default','#', extension = False)}}">
+                                    {{ pass }} 
+                                {{ elif auth.has_membership(role = 'DEPARTMENT MANAGERS') | auth.has_membership(role = 'ADMINISTRATION MANAGER') : }}            
+                                    {{ if _row.status_id == 3: }}                     
+                                        <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved" disabled="True">
+                                        <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject" disabled="True">
+                                        <input class="btn btn-info btn-flat" type="button" value="Return" onclick=window.location="{{=URL('leave_mngt','get_application_leave_grid', extension = False)}}">                            
+                                    {{ elif _row.status_id == 12: }}                                
+                                        <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved" onclick="ajax('{{=URL('leave_mngt','put_application_dept_leave_id_approved', args = request.args(0))}}')">
+                                        <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject" onclick="ajax('{{=URL('leave_mngt','put_application_dept_leave_id_rejected', args = request.args(0))}}')">
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('default','#', extension = False)}}">
+                                    {{ elif _row.status_id >= 4: }}                     
+                                        <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved" disabled="True">
+                                        <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject" disabled="True">
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('default','#', extension = False)}}">
+                                    {{ else: }}  
+                                        {{ if (_usr.sub_department_id >= 3) and (_usr.sub_department_id <= 7):}}                                    
+                                            {{ if _usr.sub_department_id == 3 or _usr.sub_department_id == 7: }}
+                                                <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved">
+                                                <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject">
+                                            {{ else: }}
+                                                <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved" disabled="True">
+                                                <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject" disabled="True">
+                                            {{ pass }}
+                                        {{ else: }}
+                                            <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved">
+                                            <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject">
+                                        {{ pass }}
+                                        <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('default','#', extension = False)}}">
+                                    {{ pass }}
+                                {{ else: }}
+                                    <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('default','#', extension = False)}}">
+                                {{ pass }}
+                                <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                                {{ if _row.status_id == 16: }}
+                                    <input class="btn btn-danger btn-flat" type="button" value="Cancel Application" id="btnCancel" disabled>
+                                {{ else: }}
+                                    <input class="btn btn-danger btn-flat" type="button" value="Cancel Application" id="btnCancel">
+                                {{ pass }}
+                                <!-- <input class="btn btn-info btn-flat" type="button" value="Leave Chart" id="btnChart"> -->
+
+                            </div>
+                        </div>        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">HR Remarks</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_row.hr_remarks}}" readonly></div>
+                        </div>        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Mngt. Remarks</label>
+                            <div class="col-sm-4"><input text="text" class="form-control" value="{{=_row.mngt_remarks}}" readonly></div>
+                        </div>        
+
+                    </div>                    
+                </div>
+            </div>
+        </div>                   
+    </div>
+    <br>
+    <div class="row">
+        {{=LOAD('leave_mngt','get_applicaton_leave_history_id.load', ajax = True, args = request.args(0))}}
+
+    </div>
+    <div class="calendar" data-provide="calendar"></div>
+</section>
+<script src="{{=URL('static','dist/js/bootstrap-year-calendar.min.js')}}"></script>
+<script>
+$(document).ready(function(){
+    $("#btnDeptRemarks").click(function(){
+        ajax('{{=URL('leave_mngt','put_application_dept_leave_remarks_id', args = request.args(0))}}', ['dept_remarks'])
+        alertify.success('Remark sent...');
+    });
+
+    $("#btnHistory").click(function(){        
+         alertify.alert().set({'startMaximized':true, 'title':'Leave History','message':'{{=LOAD('leave_mngt','get_view_leave_history_id', args = request.args(0))}}'}).show();         
+    });
+    // $("#btnChart").click(function(){        
+    
+    //     }).show();
+    // });
+
+   
+    $("#department_approved").click(function(){
+        alertify.prompt( 'Leave Application', 'Confirmation for approval.', ''
+               , function(evt, value) {
+                    ajax('{{=URL('leave_mngt','put_application_dept_leave_id_approved', args = request.args(0))}}' + '/' + value.toString())                     
+                    {{if auth.has_membership(role = 'ADMINISTRATION MANAGER') : }}
+                        window.location="{{=URL('leave_mngt','get_application_leave_grid',extension = False)}}"
+                    {{ else: }}
+                        window.location="{{=URL('leave_mngt','get_application_dept_leave_grid',extension = False)}}"
+                    {{ pass }}
+                    
+                   }
+               , function() { alertify.error('Cancel') });        
+    });
+
+    $("#department_rejected").click(function(){
+        alertify.prompt( 'Leave Application', 'Remarks', ''
+               , function(evt, value) {
+                    ajax('{{=URL('leave_mngt','put_application_dept_leave_id_rejected', args = request.args(0))}}' + '/' + value.toString())                     
+                    window.location="{{=URL('leave_mngt','get_application_dept_leave_grid',extension = False)}}"                              
+                   }
+               , function() { alertify.error('Cancel') });
+    });
+
+    $("#hr_approved, #hr_rejected").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_hr_leave_grid')}}"
+    });
+    $("#mngr_approved").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid')}}"
+    });
+    $("#btnCancel").click(function(){
+        alertify.confirm('Leave Application', 'This application will remove to your grid.', 
+        function(){             
+            ajax('{{=URL('leave_mngt','put_application_leave_id_cancelled', args = request.args(0))}}')
+            // window.location="{{=URL('default','#')}}"
+        }, 
+        function(){ alertify.error('Cancel')});
+        
+    });
+
+});
+
+</script>

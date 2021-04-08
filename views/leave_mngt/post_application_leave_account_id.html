@@ -1,0 +1,226 @@
+{{extend 'layout.html'}}
+{{import locale, datetime}}
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="info-box bg-yellow">
+              <span class="info-box-icon"><i class="fa fa-user-o"></i></span>
+  
+              <div class="info-box-content">
+                <span class="info-box-text">{{=_row.type_of_leave_id.type_of_leave}} INFORMATION</span>
+                <span class="info-box-number">{{=_row.employee_id.first_name}} {{=_row.employee_id.middle_name}} {{=_row.employee_id.last_name}}, {{=_ei.account_code}}</span>
+                
+                <div class="progress">
+                  <div class="progress-bar" style="width: 100%"></div>
+                </div>
+                    <span class="progress-description">
+                      Transaction No: {{=_row.transaction_no}} | From: {{=_row.from_effective_date.strftime('%d %b. %Y')}} | To: {{=_row.to_effective_date.strftime('%d %b. %Y')}}
+                    </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">            
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image"> -->
+                        <span class="username"><a href="#">Leave Salary Slip</a></span>
+                        <span class="description">Year {{=request.now.year}}</span>
+                    </div>
+
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+
+                    </div>
+                
+                </div>
+                
+                <div class="box-body">
+                    {{=form.custom.begin}}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Leave Salary</th><th>Air Ticket</th><th>Commission/Bonus</th><th>Salary Due if any</th><th>Gratuity</th><th>Other Payments</th><th>{{=T('%s %%{day}',_row.from_effective_date.day - 1)}} {{=_row.from_effective_date.strftime('%B')}} Salary</th><th>Total Gross</th>
+                            </tr>
+                        </thead>
+                        <body>
+                            <tr>
+                                <td>{{=form.custom.widget.leave_salary}}</td>
+                                <td>{{=form.custom.widget.air_ticket}}</td>
+                                <td>{{=form.custom.widget.commission_or_bonus}}</td>
+                                <td>{{=form.custom.widget.salary_due}}</td>
+                                <td>{{=form.custom.widget.gratuity}}</td>
+                                <td>{{=form.custom.widget.other_payments}}</td>
+                                <td>{{=form.custom.widget.month_salary}}</td>
+                                <td>{{=form.custom.widget.total_gross}}</td>
+                            </tr>
+                        </body>
+                        <foot>                         
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Less: Deduction</td>
+                                <td>{{=form.custom.widget.deductions}}</td>
+                            </tr>
+                            <tr>
+                                <td>Management</td>
+                                <td><p class="text-muted">{{=_row.mngt_remarks}}</p></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Net Total</td>
+                                <td>{{=form.custom.widget.net_total}}</td>
+                            </tr>         
+                            <tr>
+                                <td>Remarks</td>
+                                <td colspan="3">{{=form.custom.widget.remarks}}</td>
+                                <td></td>
+                                <td colspan="3">
+                                    <input class="btn btn-success btn-flat" type="button" id="btnSettled" onclick="settled();" value="Settled">
+                                    <input class="btn btn-info btn-flat" type="button" id="btnCalculate" onclick="calculate();" value="Calculate">
+                                    <input class="btn btn-warning btn-flat" type="button" id="btnSavePrint" onclick="saveandprint();" value="Save & Print">
+                                    <input class="btn btn-danger btn-flat" type="button" id="btnCancel" value="Cancel">
+                                    <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                                </td>
+                            </tr>                                         
+                        </foot>
+                    </table>
+                    {{=form.custom.end}}
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="row">         
+        <div class="col-md-12">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <!-- <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image"> -->
+                        <span class="username"><a href="#">Salary Details</a></span>
+                        <span class="description">Year {{=request.now.year}}</span>
+                    </div>
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>                
+                </div>
+            
+                <div class="box-body">           
+                    <table class="table table-bordered">
+                        {{import locale}}
+                        <tr class="bg-gray disabled color-palette"><td>Basic Salary</td><td>Housing Allowances</td><td>Car Allowances</td></tr>
+                        <tr><td>{{=locale.format('%.2f',_ai.basic_income or 0, grouping = True)}}</td><td>{{=locale.format('%.2f',_ai.housing_allowances or 0, grouping = True)}}</td><td>{{=locale.format('%.2F',_ai.car_allowances or 0, grouping = True)}}</td></tr>
+                        <tr class="bg-gray disabled color-palette"><td>Petrol Allowances</td><td>Food Allowances</td><td>Others</td></tr>
+                        <tr><td>{{=locale.format('%.2F',_ai.petrol_allowances or 0, grouping = True)}}</td><td>{{=locale.format('%.2F',_ai.food_allowances or 0, grouping = True)}}</td><td>{{=locale.format('%.2F',_ai.others or 0, grouping = True)}}</td></tr>
+                        <tr><td class="bg-gray disabled color-palette">Incentive/Bonus</td><td class="bg-gray disabled color-palette">Mobile Allowances</td><td class="bg-green-active color-palette"><B>Total Gross Pay</B></td></tr>
+                        <tr><td>{{=locale.format('%.2F',_ai.incentive or 0, grouping = True)}}</td><td>{{=locale.format('%.2F',_ai.mobile_allowances or 0, grouping = True)}}</td><td class="bg-gray color-palette"><B>{{=locale.format('%.2F',_ai.total_gross_pay or 0, grouping = True)}}</B></td></tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {{=LOAD('leave_mngt','get_applicaton_leave_history_id.load', ajax = True, args = request.args(0))}}
+    </div>               
+</section>
+
+<script>
+$(document).ready(function(){
+    
+    $(" #Leave_Salary_Slip_total_gross, #Leave_Salary_Slip_net_total").prop({"readonly": true, "tabindex":-1});    
+    $("#btnSavePrint").click(function(){        
+        alertify.confirm('Leave Application', 'Save and print to confirm.', function(){ funcYes() }
+                , function(){ alertify.error('Cancel')});        
+        // toastr["success"]('Proceed to save and print? <div><input type="submit" id="btnYes" class="yes btn btn-primary" value="yes"onclick="funcYes()"><button type="button" id="btnNo" class="btn btn-danger" onclick="funcNo()" style="margin: 0 8px 0 8px">No</button></div>')
+    });
+    $("#btnSettled").click(function(){
+        ajax("{{=URL('leave_mngt','put_application_settled_id', args = request.args(0))}}");
+        window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}"
+    });
+
+    $("#btnCancel").click(function(){
+        ajax("{{=URL('leave_mngt','put_application_leave_cancel_id', args = request.args(0))}}")
+        window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}"
+    });
+    $("#btnHistory").click(function(){        
+         alertify.alert().set({'startMaximized':true, 'title':'Leave History','message':'{{=LOAD('leave_mngt','get_view_leave_history_id', args = request.args(0))}}'}).show();         
+    });    
+    $("#btnEditSal").click(function(){
+        alertify.confirm('Salary Breakdown', 'Remove current salary breakdown?', 
+            function(){         
+                parseFloat($("#Leave_Salary_Slip_month_salary").val(0));
+                compute();
+            }, 
+            function(){ alertify.error('Cancel')});                       
+    });
+});
+    function compute(){
+        var _leave_salary   = parseInt($("#Leave_Salary_Slip_leave_salary").val());
+        var _month_salary   = parseInt($("#Leave_Salary_Slip_month_salary").val());
+        var _net_total      = parseInt($("#Leave_Salary_Slip_net_total").val());
+        var _total_gross    = parseInt($("#Leave_Salary_Slip_total_gross").val());    
+
+        var _air_ticket     = parseFloat($("#Leave_Salary_Slip_air_ticket").val());
+        var _comm_bonus     = parseFloat($("#Leave_Salary_Slip_commission_or_bonus").val());
+        var _salary_due     = parseFloat($("#Leave_Salary_Slip_salary_due").val());
+        
+        var _gratuity       = parseFloat($("#Leave_Salary_Slip_gratuity").val());
+        var _other_payments = parseFloat($("#Leave_Salary_Slip_other_payments").val());
+        var _deductions     = parseFloat($("#Leave_Salary_Slip_deductions").val());                
+        var _month_salary   = parseFloat($("#Leave_Salary_Slip_month_salary").val());                
+        _total_gross        =  _leave_salary + _air_ticket + _comm_bonus + _salary_due + _other_payments + _month_salary + _gratuity
+        _net_total          = _total_gross - _deductions
+
+        $("#Leave_Salary_Slip_total_gross").val(parseFloat(_total_gross));
+        $("#Leave_Salary_Slip_net_total").val(parseFloat(_net_total));        
+    }
+    function funcYes(){                
+        ajax("{{=URL('leave_mngt','put_application_save_and_print_id', args = request.args(0))}}",['leave_salary', 'air_ticket', 'commission_or_bonus', 'salary_due','gratuity','other_payments','month_salary','total_gross','deductions','net_total','remarks']);
+        window.open("{{=URL('leave_mngt_reports','get_application_leave_account_report_id', args = request.args(0))}}", "_blank")
+        window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}"
+    }
+    function history(){
+        alertify.alert().set({'startMaximized':true, 'title':'Leave History','message':'{{=LOAD('leave_mngt','get_view_leave_history_id', args = request.args(0))}}'}).show();         
+    }
+    function saveandprint(){
+        alertify.confirm('Leave Application', 'Save and print to confirm.', function(){ funcYes() }
+                , function(){ alertify.error('Cancel')});        
+    }
+    function settled(){
+        ajax("{{=URL('leave_mngt','put_application_settled_id', args = request.args(0))}}");
+        window.location="{{=URL('leave_mngt','get_application_leave_account_grid')}}"
+    }
+    function calculate(){
+        
+        var _leave_salary   = document.getElementById("Leave_Salary_Slip_leave_salary").value;
+        var _air_ticket     = document.getElementById("Leave_Salary_Slip_air_ticket").value;
+        var _comm_bonus     = document.getElementById("Leave_Salary_Slip_commission_or_bonus").value;
+        var _salary_due     = document.getElementById("Leave_Salary_Slip_salary_due").value;        
+        var _gratuity       = document.getElementById("Leave_Salary_Slip_gratuity").value;
+        var _other_payments = document.getElementById("Leave_Salary_Slip_other_payments").value;
+        var _deductions     = document.getElementById("Leave_Salary_Slip_deductions").value;                
+        var _month_salary   = document.getElementById("Leave_Salary_Slip_month_salary").value;
+        
+        _total_gross        =  Number(_leave_salary) + Number(_air_ticket) + Number(_comm_bonus) + Number(_salary_due) + Number(_other_payments) + Number(_month_salary) + Number(_gratuity)
+        _net_total          =  Number(_total_gross) - Number(_deductions)
+
+        document.getElementById("Leave_Salary_Slip_total_gross").value = _total_gross.toFixed(2);
+        document.getElementById("Leave_Salary_Slip_net_total").value = _net_total.toFixed(2);
+                
+        alertify.success('Calculated');
+    }
+</script>

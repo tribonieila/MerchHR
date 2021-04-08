@@ -1,0 +1,89 @@
+{{extend 'layout.html'}}
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Memorandum <small>Form</small></h3>       
+                    <div class="pull-right">                        
+                        <a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a>
+                    </div>              
+                </div>
+                <div class="box-body">
+                    {{=form.custom.begin}}                  
+                    <div class="form-horizontal">            
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Date:</label>
+                            <div class="col-sm-9">
+                                {{=form.custom.widget.memorandum_date}}
+                            </div>                
+                        </div>    
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Memorandum No:</label>
+                            <div class="col-sm-9">                        
+                                <input class="form-control" name="ckey" value="{{=_ckey}}" readonly>
+                            </div>                
+                        </div>                                
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Memorandum From:</label>
+                            <div class="col-sm-9">
+                                {{=form.custom.widget.memorandum_from}}
+                            </div>                
+                        </div>     
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Memorandum To:</label>
+                            <div class="col-sm-9">
+                                {{=form.custom.widget.memorandum_to}}
+                            </div>                
+                        </div>                               
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Memorandum Subject:</label>
+                            <div class="col-sm-9">
+                                {{=form.custom.widget.memorandum_subject}}
+                            </div>                
+                        </div>                                      
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Atached (.pdf):</label>
+                            <div class="col-sm-9">
+                                {{=form.custom.widget.attached}}
+                            </div>                
+                        </div>                
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Confidential:</label>
+                            <div class="col-sm-9">
+                                {{=form.custom.widget.confidential}}
+                            </div>                
+                        </div>    
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-9">
+                                <button type="button" class="btn btn-danger  btn-flat" onclick="onClose()">Close & Cancel</button>
+                                <button type="submit" class="btn btn-primary btn-flat">Save Changes</button>                                
+                            </div>                
+                        </div>                          
+                        
+                    </div>         
+                    {{=form.custom.end}}                         
+                    <hr>                             
+                    {{=table}}
+                </div>        
+            </div>            
+        </div>        
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){
+    $("#btnRefresh").click(function(){
+        location.reload();
+    });
+    $(".table").DataTable();
+}); 
+    function onNewMemo(){
+        window.location.href="{{=URL('communication','get_memorandum_form')}}"        
+    }
+    function onClose(){
+        window.location.href="{{=URL('default','index')}}"        
+    }
+</script>
+

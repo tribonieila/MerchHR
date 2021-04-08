@@ -1,0 +1,30 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        {{=LOAD('leave_mngt','get_application_leave_id.load', ajax = True, args = request.args(0))}}
+    </div>
+    <div class="row">
+        {{=LOAD('leave_mngt','get_applicaton_leave_history_id.load', ajax = True, args = request.args(0))}}
+    </div>
+    
+</section>
+
+<script>
+$(document).ready(function(){
+    
+    $("#department_approved, #department_rejected").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_dept_leave_grid')}}"
+    });
+    $("#hr_approved, #hr_rejected").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_hr_leave_grid')}}"
+    });
+    $("#mngr_approved").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid')}}"
+    });
+
+
+});
+</script>

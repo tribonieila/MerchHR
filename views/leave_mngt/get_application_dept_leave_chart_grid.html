@@ -1,0 +1,65 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3> 
+                    <div class="pull-right"><a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a></div>
+                </div>
+                <div class="box-body">
+                    <div id="toolbar">
+                        <input type="button" id="btnSubmit" class="btn btn-primary btn-flat" value="Submit Chart">          
+                        <input type="button" id="btnUpdate" class="btn btn-warning btn-flat" value="Update Chart">          
+                        <input type="button" id="btnProcess" class="btn btn-danger btn-flat" value="Process New Chart">                                    
+                    </div>                    
+                    {{=table}} 
+                </div>        
+                <div class="box-footer clearfix">
+                    <div class="col-xs-8"></div>
+                    <div class="col-xs-4">                        
+                    </div>
+                    
+                </div>                          
+            </div> 
+        </div>        
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){
+    $("#btnRefresh").click(function(){        
+        window.location.reload();
+    });
+    $("#btnSubmit").click(function(){
+        console.log("submit");
+        // window.location.reload();
+        // alertify.confirm('Confirm Title', 'Confirm Message', function(){ alertify.success('Ok') }, function(){ alertify.error('Cancel')});
+    });
+    $("#btnUpdate").click(function(){        
+        alertify.confirm('Leave Chart', 'Update leave chart?', 
+            function(){ 
+                ajax('{{=URL('leave_mngt','put_application_dept_leave_chart')}}', ['ctr','from_effective_date','to_effective_date']);                
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+
+    $("#btnProcess").click(function(){
+        alertify.confirm('Leave Chart', 'Process new chart?', 
+            function() { 
+                ajax("{{=URL('leave_mngt','post_application_dept_leave_chart')}}");
+                alertify.success('Ok')                 
+            }, 
+            function(){ alertify.error('Cancel')}
+        );
+        
+
+    });
+
+});
+    
+</script>

@@ -1,0 +1,29 @@
+{{extend 'layout.html'}}
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Employee Self-Service<small>Grid</small></h3> 
+
+                </div>
+                <div class="box-body">
+                    {{=table}}
+                </div>   
+                <div class="box-footer clearfix">
+                    <a href="{{=URL('leave_mngt','post_application_leave')}}" type="button" class="btn btn-primary btn-flat pull-right">Place New Application</a>                                
+                </div>                 
+            </div> 
+        </div>        
+    </div>
+</section>
+
+<script>
+    $(document).ready(function(){
+        
+        var table = $(".table").DataTable({
+            responsive: true,
+        })
+    })
+</script>

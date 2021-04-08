@@ -1,0 +1,26 @@
+{{extend 'layout.html'}}
+
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Reports</h3>
+                </div>
+                <div class="box-body">                                     
+                    {{=table}}
+                    
+                </div>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){
+    $(".table").DataTable();
+});
+</script>

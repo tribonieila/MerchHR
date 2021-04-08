@@ -1,0 +1,58 @@
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <!-- <p class="highcharts-description">
+        Pie charts are very popular for showing a compact overview of a
+        composition or comparison. While they can be harder to read than
+        column charts, they remain a popular choice for small datasets.
+    </p> -->
+</figure>
+
+ 
+<script>
+$(document).ready(function(){
+    {{import datetime}}
+    Highcharts.chart('container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Leave statistics as of year, {{=datetime.date.today().year}} ' 
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: 
+            [
+            {{for n in _query:}}
+                {
+                    name: '{{=n.Employee_Master_Leave.type_of_leave_id.type_of_leave}}',
+                    y: {{=n[db.Employee_Master_Leave.duration_leave.sum().coalesce_zero()]}},
+                }, 
+                {{pass}}
+            ]
+        }]
+    });
+});
+
+</script>

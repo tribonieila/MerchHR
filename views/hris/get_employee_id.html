@@ -1,0 +1,163 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','dist/css/select2.min.css')}}"/>
+<section class="content">
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Employee Master Form</h3>
+            <div class="box-tools pull-right">                
+                <button type="button" class="btn btn-box-tool" data-widget="refresh"><i class="fa fa-refresh"></i></button>
+            </div>            
+        </div>
+        <div class="form-horizontal">
+            {{=form.custom.begin}}
+            <div class="box-body">
+                <div class="row">                    
+                    <div class="col-xs-2">                        
+                        <label class="control-label">Employee No.</label>
+                        {{=form.custom.widget.employee_no}}
+                    </div>                
+                    <div class="col-xs-2">
+                        <label class="control-label">Account Code</label>
+                        {{=form.custom.widget.account_code}}
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">Department</label>
+                        <!-- <div class="input-group"> -->
+                            {{=form.custom.widget.department_code_id}}
+                            <!-- <span class="input-group-btn">
+                                <button type="button" class="btn btn-default btn-flat"><i class="fa fa-pencil-square-o"></i></button>
+                            </span>                  
+                        </div>                                                                         -->
+                    </div>    
+                        <div class="col-xs-3">
+                            <label class="control-label">Designation</label>                            
+                            {{=form.custom.widget.designation_code_id}}    
+                        </div>                    
+                    <div class="col-xs-2">
+                        <label class="control-label">Date Joined</label>
+                        {{=form.custom.widget.date_joined}}
+                    </div>
+                </div>                         
+                <div class="row">
+                    <div class="col-xs-2">
+                        <label class="control-label">Title</label>
+                        {{=form.custom.widget.title}}
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">First Name</label>                                    
+                        {{=form.custom.widget.first_name}}                        
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="control-label">Middle Name</label>                                        
+                        {{=form.custom.widget.middle_name}}                        
+                    </div>                            
+                    <div class="col-xs-3">
+                        <label class="control-label">Last Name</label>                                        
+                        {{=form.custom.widget.last_name}}                        
+                    </div>              
+                    <div class="col-xs-2">
+                        <label class="control-label">Gender</label>
+                        {{=form.custom.widget.gender}}  
+                    </div>                                        
+                </div>
+                <div class="row">                                                    
+                    <div class="col-xs-3">
+                        <label class="control-label">Street</label>                                        
+                        {{=form.custom.widget.street}}                        
+                    </div>                                        
+                    <div class="col-xs-3">
+                        <label class="control-label">Town</label>                                        
+                        {{=form.custom.widget.town}}                        
+                    </div>                                        
+                    <div class="col-xs-2">
+                        <label class="control-label">Province</label>                                        
+                        {{=form.custom.widget.province}}                        
+                    </div>                                        
+                    <div class="col-xs-2">
+                        <label class="control-label">City</label>                                        
+                        {{=form.custom.widget.city}}                        
+                    </div>                                        
+                    <div class="col-xs-2">
+                        <label class="control-label">Country</label>                                                                
+                        {{=form.custom.widget.country}}
+                    </div>                                        
+                                    
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">
+                        <label class="control-label">Telephone No.</label>
+                        {{=form.custom.widget.telephone_no}}
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">Mobile No.</label>
+                        {{=form.custom.widget.mobile_no}}
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">Email</label>
+                        {{=form.custom.widget.email}}
+                    </div>        
+                    <div class="col-xs-3">
+                        <label class="control-label">Nationality</label>                        
+                        {{=form.custom.widget.nationality}}    
+                    </div>
+                                  
+                </div>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <label class="control-label">Marital Status</label>
+                        {{=form.custom.widget.marital_status}}
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">Religion</label>
+                        {{=form.custom.widget.religion}}
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">Birth Place</label>
+                        {{=form.custom.widget.birth_place}}
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="control-label">Birth Date</label>
+                        {{=form.custom.widget.birth_date}}
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="control-label">Father's Name</label>
+                        {{=form.custom.widget.fathers_name}}
+                    </div>
+                              
+                </div>
+                <div class="row">
+                        <div class="col-xs-3">
+                                <label class="control-label">Languages</label>
+                                {{=form.custom.widget.languages}}
+                            </div>                          
+                        <!-- <div class="form-group">
+                                <label>Multiple</label>
+                                <select class="form-control select2 select2-hidden-accessible" multiple="" data-placeholder="Select a State" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                  <option>Alabama</option>
+                                  <option>Alaska</option>
+                                  <option>California</option>
+                                  <option>Delaware</option>
+                                  <option>Tennessee</option>
+                                  <option>Texas</option>
+                                  <option>Washington</option>
+                                </select><span class="select2 select2-container select2-container--default" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1"><ul class="select2-selection__rendered"><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="Select a State" style="width: 683.5px;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                              </div>                           -->
+                    <div class="col-xs-3">
+                        <label class="control-label">Status</label>                                        
+                        {{=form.custom.widget.employee_status_id}}    
+                    </div>                                
+                </div>    
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">                    
+                    <!-- onclick="window.location.href='b.php'" -->
+            <!-- <button type="button" class="btn btn-danger btn-flat" onclick="window.location.href = '{{=URL('#')}}'";>Cancel</button> -->
+            <button type="submit" class="btn btn-success pull-right btn-flat">Submit</button>
+            </div>
+            {{=form.custom.end}}
+        </div>
+    </div>
+</section>
+
+
+<script src="{{=URL('static','dist/js/select2.full.min.js')}}"></script>

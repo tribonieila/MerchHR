@@ -1,0 +1,24 @@
+<div id="labtoolbar">
+    <input type="button" id="btnLabUpdate" class="btn btn-success btn-flat" value="Update Date">              
+    <input type="button" id="btnLabPrint" class="btn btn-warning btn-flat" value="Print">              
+</div>    
+{{=table}}
+<script>
+    $("#btnLabUpdate").click(function(){        
+        alertify.confirm('Reports', 'Update expired date?', 
+            function(){                 
+                ajax('{{=URL('hris','put_labour_card_report_grid')}}', ['lab','labor_card_no_expiration_date']),
+                alertify.success('Updated') 
+                window.location.reload();
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnLabPrint").click(function(){        
+        alertify.confirm('Reports', 'Print expired date?', 
+            function(){                            
+                window.open('{{=URL('hris_reports','get_cards_report', args = 6, extension = False)}}'),
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });  
+</script>

@@ -1,0 +1,48 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+    <h1>Payroll Management<small>Update</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-success">
+                <div class="box-header with-border">           
+                    <h3 class="box-title">{{=_id.account_no_id.employee_id.first_name.upper()}} {{=_id.account_no_id.employee_id.middle_name.upper()}} {{=_id.account_no_id.employee_id.last_name.upper()}}</h3>  <small>{{=_id.account_no_id.employee_no}}</small>
+                </div>        
+            <div class="box-body">
+                
+                {{=form.custom.begin}}
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Account No</label>
+                        <div class="col-sm-5"><input type="text" class="form-control pull-right" id="account_no_id" name="account_no_id" value="{{=_id.account_no_id.account_code}}" readonly></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Date Overtime</label>
+                        <div class="col-sm-5">{{=form.custom.widget.date_overtime}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Excess Hours</label>
+                        <div class="col-sm-5">{{=form.custom.widget.excess_hours}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Status</label>
+                        <div class="col-sm-5">{{=form.custom.widget.status_id}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Remarks</label>
+                        <div class="col-sm-5">{{=form.custom.widget.remarks}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-5">{{=form.custom.submit}}</div>                            
+                    </div>
+                </div>
+                {{=form.custom.end}}
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+

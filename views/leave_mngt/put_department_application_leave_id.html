@@ -1,0 +1,236 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form</h3>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        {{=form.custom.begin}}     
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Transaction No.</label>                            
+                            <div class="col-sm-4"><input class="form-control" id="Employee_Master_Leave_Temporary_transaction_no" name="transaction_no" type="text" value={{=_id.transaction_no}} autocomplete="off" readonly></div>                            
+                            <label class="col-sm-2 control-label">Transaction Date</label>
+                            <div class="col-sm-4"><input class="form-control" id="Employee_Master_Leave_Temporary_application_date" name="application_date" type="text" value={{=_id.application_date}} autocomplete="off" readonly></div>
+                        </div>                   
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label>
+                            <div class="col-sm-4">{{=form.custom.widget.employee_id}}</div>    
+                            <label class="col-sm-2 control-label">Type of Leave</label>
+                            <div class="col-sm-2">{{=form.custom.widget.type_of_leave_id}}</div>
+                            <label class="col-sm-1 control-label">Duration</label>
+                            <div class="col-sm-1">{{=form.custom.widget.duration_leave}}</div>                              
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Replacement</label>
+                            <div class="col-sm-4">{{=form.custom.widget.replacement}}</div>
+                            <label class="col-sm-2 control-label">Effective Date</label>
+                            <div class="col-sm-2">{{=form.custom.widget.from_effective_date}}</div>
+                            <div class="col-sm-2">{{=form.custom.widget.to_effective_date}}</div>
+                        </div>
+    
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>        
+                            <label class="col-sm-2 control-label">Status</label>
+                            <div class="col-sm-4">{{=form.custom.widget.status_id}}</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6"></div>
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
+                                {{ if auth.has_membership(role = 'DEPARTMENT MANAGERS'): }}
+                                    <input class="btn btn-danger btn-flat" type="button" value="Abort" onclick=window.location="{{=URL('leave_mngt','get_application_dept_leave_grid')}}">
+                                {{ else: }}
+                                    <input class="btn btn-danger btn-flat" type="button" value="Abort" id="btnAbort">
+                                {{ pass }}
+                            </div>
+                        </div>
+            
+                        {{=form.custom.end}}        
+                    </div>                    
+                </div>
+            </div>            
+            <div class="row">
+                <div id="history"></div>
+                
+            </div>
+            <div class="row">
+                <div id="other_history">   
+                                     
+                    <div class="col-md-12">
+                        <div class="box box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">LEAVE HISTORY</h3>
+                            </div>
+                            
+                            <div class="box-body">
+                                <div class="box-group" id="accordion">
+                            
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" class="collapsed">Annual Leave</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div class="box-body">                                        
+                                            {{=LOAD('leave_mngt','get_leave_history_table_id.load', ajax = True)}}                                                                                    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed" aria-expanded="false">Business Leave</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="box-body">
+                                        {{=LOAD('leave_mngt','get_business_leave_history_table_id.load', ajax = True)}}   
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="panel box box-success">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed" aria-expanded="false">Compassionate Leave</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="box-body">
+                                        {{=LOAD('leave_mngt','get_compassionate_history_table_id.load', ajax = True)}}                                                                                    
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="panel box box-default">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="collapsed" aria-expanded="false">Day Off(Excess Hour)</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseFour" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="box-body">
+                                        {{=LOAD('leave_mngt','get_day_off_leave_history_table_id.load', ajax = True)}}   
+                                    </div>
+                                </div>    
+                                </div>
+                                <div class="panel box box-warning">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="collapsed" aria-expanded="false">Emergency Leave</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseFive" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="box-body">
+                                        {{=LOAD('leave_mngt','get_emergency_leave_history_table_id.load', ajax = True)}}   
+                                    </div>
+                                </div>    
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" class="collapsed" aria-expanded="false">Maternity Leave</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseSix" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="box-body">
+                                        {{=LOAD('leave_mngt','get_maternity_leave_history_table_id.load', ajax = True)}}   
+                                    </div>
+                                    </div>  
+                                </div>
+                                <div class="panel box box-info">
+                                    <div class="box-header with-border">
+                                    <h4 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" class="collapsed" aria-expanded="false">Sick Leave</a>
+                                    </h4>
+                                    </div>
+                                    <div id="collapseSeven" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                    <div class="box-body">
+                                        {{=LOAD('leave_mngt','get_sick_leave_history_table_id.load', ajax = True)}}   
+                                    </div>
+                                    </div>                                                                                                          
+                                </div>                                                        
+                                </div>        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){    
+    $("#history, #other_history").hide();
+    $("#Employee_Master_Leave_return_date, #return_date_label").attr('disabled','disabled');
+    $("#Employee_Master_Leave_type_of_leave_id, #Employee_Master_Leave_employee_id").change(function(){
+        if ($("#Employee_Master_Leave_type_of_leave_id").val() && $("#Employee_Master_Leave_employee_id").val()) {            
+            $("#history,  #other_history").fadeIn();
+
+            if (($("#Employee_Master_Leave_type_of_leave_id").val() == 2) || ($("#Employee_Master_Leave_type_of_leave_id").val() == 7)) {
+                $("#Employee_Master_Leave_return_date, #return_date_label").attr('disabled','disabled');                
+            } else {
+                $("#Employee_Master_Leave_return_date, #return_date_label").removeAttr('disabled');                
+            }
+            ajax("{{=URL("leave_mngt","get_application_history_id")}}",['employee_id','type_of_leave_id'],'history')
+             
+        } else {            
+            $("#history, #other_history").fadeOut();
+        }
+
+    });
+    $("#Employee_Master_Leave_duration_leave, #Employee_Master_Leave_from_effective_date, #Employee_Master_Leave_to_effective_date").change(function(){        
+        var res = ""
+        var new_days        =  new Date();
+        var start_date      =  new Date($("#Employee_Master_Leave_from_effective_date").val());
+        var end_date        =  new Date($("#Employee_Master_Leave_to_effective_date").val());
+        var duration        = $("#Employee_Master_Leave_duration_leave").val();
+        var joining_date    =  new Date($("#Employee_Master_Leave_return_date").val());            
+        new_days.setDate(start_date.getDate() + parseInt(Math.floor(duration)))
+        format_days = new_days.getFullYear()+'-'+ (new_days.getMonth()+1) + '-' +new_days.getDate()   
+        // if (start_date < end_date){
+        //     var days = (end_date - start_date)/1000/60/60/24;
+        //     console.log('days');
+        //     $("#Employee_Master_Leave_duration_leave").val(days);
+
+        // }
+        $("#Employee_Master_Leave_to_effective_date").val(format_days);
+        
+
+    });
+
+    $("#btnAbort").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_leave_grid')}}"
+    });
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    $('.table').bootstrapTable();
+});
+
+</script>
+
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>

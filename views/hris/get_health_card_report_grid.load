@@ -1,0 +1,24 @@
+<div id="heatoolbar">
+    <input type="button" id="btnHeaUpdate" class="btn btn-success btn-flat" value="Update Date">              
+    <input type="button" id="btnHeaPrint" class="btn btn-warning btn-flat" value="Print">              
+</div>    
+{{=table}}
+<script>
+    $("#btnHeaUpdate").click(function(){        
+        alertify.confirm('Reports', 'Update expired date?', 
+            function(){                 
+                ajax('{{=URL('hris','put_health_card_report_grid')}}', ['hea','health_card_no_expiration_date']),
+                alertify.success('Updated') 
+                window.location.reload();
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnHeaPrint").click(function(){        
+        alertify.confirm('Reports', 'Print expired date?', 
+            function(){                            
+                window.open('{{=URL('hris_reports','get_cards_report', args = 4, extension = False)}}'),
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });      
+</script>

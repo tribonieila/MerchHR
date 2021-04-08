@@ -1,0 +1,77 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static','dist/bower_components/bootstrap-daterangepicker/daterangepicker.css')}}"/>
+<script src="{{=URL('static','dist/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<section class="content-header">
+    <h1>Payroll Management<small>Grid</small></h1>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box box-success">
+        <div class="box-header with-border">
+            <div class="col-md-8">
+                <h3 class="box-title">Overtime</h3>
+            </div>
+        </div>
+
+        <div class="box-body">
+            {{=LOAD('payroll_mngt','get_overtime_table.load', ajax = True, target = 'tblOvertime')}}
+            
+        </div>
+        <!-- <div class="box-footer">                             -->
+            <!-- <button type="button" id="btnOvertime" class="btn btn-success pull-right btn-flat">Place New Overtime</button>                         -->
+            
+        <!-- </div>               -->
+      </div>
+      <div id="account_form">
+            <div class="box box-default">
+                <div class="box-body">                
+                    {{=form.custom.begin}}
+                    <div class="col-md-2">                                    
+                        <label>Account Code</label>
+                        {{=form.custom.widget.account_no_id}}                    
+                    </div>
+                    <div class="col-md-2">
+                        <label>Date</label>
+                        {{=form.custom.widget.date_overtime}}
+                    </div>
+                    <div class="col-md-2">
+                        <label>Hours</label>
+                        {{=form.custom.widget.excess_hours}}
+                    </div>
+                    <div class="col-md-2">
+                        <label>Status</label>
+                        {{=form.custom.widget.status_id}}
+                    </div>
+                    <div class="col-md-2">
+                        <label>Remarks</label>
+                        {{=form.custom.widget.remarks}}
+                    </div>
+                    <div class="col-md-2">    
+                        <label></label>    
+                        <br>            
+                        <button type="submit" class="btn btn-default pull-right btn-flat">Submit</button>                        
+                    </div>
+        
+                    {{=form.custom.end}}
+                
+                </div>
+            </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+$(document).ready( function () {
+    
+    // $('#account_form').hide();
+    $('#btnOvertime').click(function(){        
+        $('#account_form').slideDown('slow');
+        $('#btnOvertime').attr('disabled', 'disabled');
+    });
+
+    $('.table').bootstrapTable();
+});
+
+</script>

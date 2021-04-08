@@ -1,0 +1,26 @@
+{{extend 'layout.html'}}
+<script>
+{{=ASSIGNJS(
+  w2p_ajax_date_format = T('%Y-%m-%d'),
+  w2p_ajax_datetime_format = T('%Y-%m-%d %H:%M:%S'),
+  )}}
+  //--></script>
+<section class="content">
+  <div class="row">      
+    <div class="col-xs-12">      
+      <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">HR Reminders Form</h3>                                       
+        </div>                
+        <div class="box-body">                    
+            {{=form}}          
+        </div>
+      </div>
+    </div>
+  </div>
+</section> 
+<script>
+$(document).ready(function(){
+  $("#EOS_employee_id option:not(:selected)").prop('disabled',true);
+});
+</script>

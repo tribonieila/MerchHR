@@ -1,0 +1,544 @@
+{{extend 'layout.html'}}
+{{ import locale}}
+<script>
+{{=ASSIGNJS(
+    w2p_ajax_date_format = T('%Y-%m-%d'),
+    w2p_ajax_datetime_format = T('%Y-%m-%d %H:%M:%S')
+)}}
+</script>
+<style>
+.profile-user-img {
+    width: 200px;
+    height: 200px;
+}
+</style>
+<section class="content-header"><h1>Employee Profile</h1></section>
+<section class="content"> 
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                <img class="profile-user-img img-responsive " src='{{=URL("default","download", args=pics.photo)}}' alt="User profile picture" style="width:None;">    
+                <h3 class="profile-username text-center" id="profile_name"></h3>    
+                <p class="text-muted text-center" id="profile_designation"></p>    
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item"><b>Employee No.</b> <a class="pull-right" id="profile_employee_no"></a></li>
+                    <li class="list-group-item"><b>Account Code</b> <a class="pull-right" id="profile_account_code"></a></li>
+                    <li class="list-group-item"><b>Department</b> <a class="pull-right" id="profile_department"></a></li>
+                </ul>    
+                <!-- <input class="upload" id="v_photos_road_permit" name="photo" type="file"> -->
+                <!-- <a href="#" class="btn btn-primary btn-block"><b>Upload Picture</b></a>                 -->
+                <!-- <input class="btn btn-primary btn-block" id="Employee_Master_photo" name="photo" type="file" value=""> -->
+                
+                
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+    
+            <!-- About Me Box -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                <h3 class="box-title">About Me</h3>
+                </div>
+                
+                <div class="box-body">
+                <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+    
+                <p class="text-muted" id="profile_education">
+                    <!-- B.S. in Computer Science from the University of Tennessee at Knoxville -->
+                </p>
+    
+                <hr>
+    
+                <strong><i class="fa fa-globe margin-r-5"></i> Nationality</strong>
+                <p class="text-muted" id="profile_nationality"></p>
+    
+                <hr>
+    
+                </div>
+                
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-9">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#basic_information" data-toggle="tab" aria-expanded="false">Basic Information</a></li>
+                    <li class=""><a href="#professional_information" data-toggle="tab" aria-expanded="false">Professional Information</a></li>
+                    <li class=""><a href="#address_details" data-toggle="tab" aria-expanded="false">Address Details</a></li>
+                    <li class=""><a href="#account_details" data-toggle="tab" aria-expanded="false">Salary/Bank Details</a></li>
+                    <li class=""><a href="#employment_details" data-toggle="tab" aria-expanded="false">Employment Details</a></li>
+                    <li class=""><a href="#other_details" data-toggle="tab" aria-expanded="false">Other Details</a></li>
+                    <li class=""><a href="#leave_history" data-toggle="tab" aria-expanded="false">Leave History</a></li>
+                    <li class=""><a href="#self_service" data-toggle="tab" aria-expanded="false">Workflow Info</a></li>
+                    <li class=""><a href="#upload_files" data-toggle="tab" aria-expanded="false">Upload Files</a></li>
+                </ul>
+                <!-- {{=form.custom.begin}} -->
+                <div class="tab-content">
+                    
+                    <div class="tab-pane active" id="basic_information">
+                        <div class="form-horizontal">
+                            
+                            <div class="form-group">                            
+                                <label class="col-sm-2 control-label">Title</label>
+                                <div class="col-sm-4">{{=form.custom.widget.title}}</div>                          
+                                <label class="col-sm-2 control-label">Marital Status</label>
+                                <div class="col-sm-4">{{=form.custom.widget.marital_status}}</div>                        
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">First Name</label>
+                                <div class="col-sm-10">{{=form.custom.widget.first_name}}</div>    
+                            </div>              
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Middle Name</label>                                        
+                                <div class="col-sm-10">{{=form.custom.widget.middle_name}}</div>                            
+                            </div>                                  
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Last Name</label>                                        
+                                <div class="col-sm-10">{{=form.custom.widget.last_name}}</div>              
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Gender</label>
+                                <div class="col-sm-4">{{=form.custom.widget.gender}}</div>     
+                                <label class="col-sm-2 control-label">Nationality</label>                        
+                                <div class="col-sm-4">{{=form.custom.widget.nationality}}</div>                                                      
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Telephone No.</label>
+                                <div class="col-sm-4">{{=form.custom.widget.telephone_no}}</div>        
+                                <label class="col-sm-2 control-label">Mobile No.</label>
+                                <div class="col-sm-4">{{=form.custom.widget.mobile_no}}</div>        
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Email</label>
+                                <div class="col-sm-4">{{=form.custom.widget.email}}</div>                
+                                <label class="col-sm-2 control-label">Status</label>                     
+                                <div class="col-sm-4">{{=form.custom.widget.employee_status_id}}</div>  
+
+                            </div>                        
+
+                        </div>
+                    </div>                
+                    <div class="tab-pane" id="professional_information">                    
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Education</label>
+                                <div class="col-sm-4">{{=form.custom.widget.education_qualification}}</div>                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Passport No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.passport_no}}
+                                </div>                            
+                                <label class="col-sm-2 control-label">Expiration Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.passport_date_expiration}}<small><i>for passport</i></small></div>                                
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Date Issued</label>
+                                <div class="col-sm-4">{{=form.custom.widget.passport_date_issued}}<small><i>for passport</i></small></div>                                
+                                <label class="col-sm-2 control-label">Given Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.date_given}}<small><i>for passport</i></small></div>                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Issuing Government</label>
+                                <div class="col-sm-4">{{=form.custom.widget.issuing_government}}</div>                            
+                                <label class="col-sm-2 control-label">Place Issued</label>
+                                <div class="col-sm-4">{{=form.custom.widget.place_issued}}</div>                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Residence Permit No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.residence_permit_no}}</div>                            
+                                <label class="col-sm-2 control-label">Expiration Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.residence_permit_no_expiration_date}}<small><i>for residence permit no</i></small></div>                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Labor Card No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.labor_card_no}}</div>                            
+                                <label class="col-sm-2 control-label">Expiration Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.labor_card_no_expiration_date}}<small><i>for labor card no</i></small></div>                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Health Card No</label>
+                                <div class="col-sm-4">                   
+                                    {{=form.custom.widget.health_card_no}} 
+                                </div>
+                                <label class="col-sm-2 control-label">Expiration Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.health_card_no_expiration_date}}<small><i>for health card no</i></small></div>                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Medical Health Card Cert. No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.medical_health_card_cert_no}}</div>                            
+                                <label class="col-sm-2 control-label">Expiration Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.medical_health_card_cert_no_expiration_date}}<small><i>for med.health card cert. no</i></small></div>                            
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Driver Licencse No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.driver_license_no}}</div>                            
+                                <label class="col-sm-2 control-label">Expiration Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.driver_license_no_expiration_date}}<small><i>for driver license no</i></small></div>                            
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Previous Job</label>
+                                <div class="col-sm-4">{{=form.custom.widget.last_job}}</div>                            
+                                <label class="col-sm-2 control-label">Reason Leaving from previous job</label>
+                                <div class="col-sm-4">{{=form.custom.widget.reason_leaving_previous_job}}</div>                            
+                            </div>
+                            <div class="form-group">
+                        
+
+                                <label class="col-sm-2 control-label">Previous Salary</label>
+                                <div class="col-sm-4">{{=form.custom.widget.previous_salary}}</div>                            
+                                <!-- <label class="col-sm-2 control-label">reason_leaving_previous_job</label>
+                                <div class="col-sm-4">{{=form.custom.widget.reason_leaving_previous_job}}</div>                             -->
+                            </div>             
+                        </div>                    
+                    </div>
+                    <div class="tab-pane" id="address_details">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-horizontal">       
+                                    <p class="lead">Foreign Address</p> 
+                                    <div class="form-group">                            
+                                        <label class="col-sm-4 control-label">Street</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.street}}</div>                            
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Town</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.town}}</div>    
+                                    </div>              
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Province</label>                                        
+                                        <div class="col-sm-8">{{=form.custom.widget.province}}</div>                            
+                                    </div>                                  
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">City</label>                                        
+                                        <div class="col-sm-8">{{=form.custom.widget.city}}</div>              
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Country</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.country}}</div>                               
+                                    </div>                        
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Contact No</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.contact_no}}</div>                               
+                                    </div>                        
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-horizontal">       
+                                    <p class="lead">Local Address</p>                 
+                                    <div class="form-group">                            
+                                        <label class="col-sm-4 control-label">Street</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.local_street}}</div>                            
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Zone</label>
+                                        <div class="col-sm-4">{{=form.custom.widget.local_zone_no}}</div>    
+                                    </div>              
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Property No</label>                                        
+                                        <div class="col-sm-4">{{=form.custom.widget.local_property_no}}</div>                            
+                                    </div>                                  
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Apartment No</label>                                        
+                                        <div class="col-sm-4">{{=form.custom.widget.local_apartment_no}}</div>              
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Landlord Name</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.landlord_name}}</div>                               
+                                    </div>                        
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Contact No</label>
+                                        <div class="col-sm-8">{{=form.custom.widget.local_contact_no}}</div>                               
+                                    </div>                        
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="account_details">
+                        <div class="form-horizontal">
+                            <h3 class="page-header">
+                                <i class="fa fa-money"></i> Income                            
+                            </h3>                        
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Basic Salary</label>
+                                <div class="col-sm-4">                                    
+                                    <input class="form-control" id="basic_income" name="basic_income" type="text" value="{{=locale.format('%.2F',_emai.basic_income or 0, grouping = True)}}" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label">Housing Allowances</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="housing_allowances" name="housing_allowances" type="text" value="{{=locale.format('%.2F',_emai.housing_allowances or 0, grouping = True)}}" readonly>                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Car Allowances</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="car_allowances" name="car_allowances" type="text" value="{{=locale.format('%.2F',_emai.car_allowances or 0, grouping = True)}}" readonly>                                                                        
+                                </div>
+                                <label class="col-sm-2 control-label">Petrol Allowances</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="petrol_allowances" name="petrol_allowances" type="text" value="{{=locale.format('%.2F',_emai.petrol_allowances or 0, grouping = True)}}" readonly>                                                                                                            
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Food Allowances</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="food_allowances" name="food_allowances" type="text" value="{{=locale.format('%.2F',_emai.food_allowances or 0, grouping = True)}}" readonly>
+                                </div>
+                                <label class="col-sm-2 control-label">Others</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="others" name="others" type="text" value="{{=locale.format('%.2F',_emai.others or 0, grouping = True)}}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Incentive</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="incentive" name="incentive" type="text" value="{{=locale.format('%.2F',_emai.incentive or 0, grouping = True)}}" readonly>                                    
+                                </div>
+                                <label class="col-sm-2 control-label">Mobile Allowances</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="mobile_allowances" name="mobile_allowances" type="text" value="{{=locale.format('%.2F',_emai.mobile_allowances or 0, grouping = True)}}" readonly>                                    
+                                </div>                                
+                            </div>                                   
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Total Gross</label>
+                                <div class="col-sm-4">
+                                    <input class="form-control" id="incentive" name="incentive" type="text" value="{{=locale.format('%.2F',_emai.total_gross_pay or 0, grouping = True)}}" readonly>                                    
+                                </div>
+
+                                <div class="col-sm-2"><input class="btn btn-warning pull-right btn-flat" type="button" value="Salary History" id="btnSalaryHistory"></div>
+                            </div>
+                        
+                            <h3 class="page-header">
+                                <i class="fa fa-money"></i> Deductions
+                            </h3>                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Bank Transfer</label>
+                                <div class="col-sm-4">{{=form.custom.widget.bank_transfer}} </div>
+                                <label class="col-sm-2 control-label">Loan or Advances</label>
+                                <div class="col-sm-4">{{=form.custom.widget.loan_or_advances}} </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Other Deductions</label>
+                                <div class="col-sm-4">{{=form.custom.widget.other_deductions}} </div>
+                                <label class="col-sm-2 control-label">Absent Deductions</label>
+                                <div class="col-sm-4">{{=form.custom.widget.absent_deductions}} </div>
+                            </div>                                               
+                            <h3 class="page-header">
+                                <i class="fa fa-building"></i> Bank
+                            </h3>                            
+                                
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Bank Account Name</label>
+                                <div class="col-sm-4">{{=form.custom.widget.bank_account_name_id}} </div>
+                                <label class="col-sm-2 control-label">Bank Account No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.bank_account_no}} </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Bank Branch</label>
+                                <div class="col-sm-4">{{=form.custom.widget.bank_branch}} </div>
+                                <label class="col-sm-2 control-label">Bank IBAN No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.bank_iban_no}} </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="employment_details">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Employee No</label>
+                                <div class="col-sm-1">{{=form.custom.widget.employee_no}}</div>
+                                <label class="col-sm-1 control-label">Account Code</label>
+                                <div class="col-sm-2">{{=form.custom.widget.account_code}}</div>
+                                <label class="col-sm-2 control-label">Date Joined</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" id="date_joined" name="date_joined" type="text" value="{{=_eed.date_joined}}" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Department</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.department_code_id}}</div>                            
+                                <label class="col-sm-2 control-label">Designation</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.designation_code_id}}</div>      
+                            </div>        
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Section</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.section_code_id}}</div>              
+                                <label class="col-sm-2 control-label">Labor Card Profession</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.labor_card_profession_id}}</div>              
+                            </div>                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Sector</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.sector}}</div>              
+                                <label class="col-sm-2 control-label">Sponsor's Name</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.sponsors_id}}</div>              
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Sponsor's OCC</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.sponsors_occ}}</div>              
+                            </div>
+                            <h3 class="page-header">
+                                <i class="fa fa-plane"></i> Leave Details                            
+                            </h3>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Leave Entitlement</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.leave_entitlement}}</div>              
+                                <label class="col-sm-2 control-label">Leave days/year</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.leave_days_per_year}}</div>              
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Air Fare</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.air_fare}}</div>    
+                                <label class="col-sm-2 control-label">Last Joining Date</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.last_joining_date}}</div>                                            
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Returned Date</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.date_last_return}}</div>              
+                                <label class="col-sm-2 control-label">Date Last Ticket</label>                                  
+                                <div class="col-sm-4">{{=form.custom.widget.date_last_ticket}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Date Leave Due</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.date_leave_due}}</div>              
+                                <label class="col-sm-2 control-label">Proposed Date</label>                                        
+                                <div class="col-sm-4">{{=form.custom.widget.proposed_date}}</div>              
+                            </div>    
+                                        
+                        </div>
+                    </div>  
+                    <div class="tab-pane" id="other_details">
+                        <div class="form-horizontal">                        
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Religion</label>
+                                <div class="col-sm-4">{{=form.custom.widget.religion}}</div>    
+                                <label class="col-sm-2 control-label">Birth Place</label>
+                                <div class="col-sm-4">{{=form.custom.widget.birth_place}}</div>
+                            </div>    
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Father's Name</label>
+                                <div class="col-sm-4">{{=form.custom.widget.fathers_name}}</div>         
+                                <label class="col-sm-2 control-label">Birth Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.birth_date}}</div>
+                            </div>                    
+                            
+                            <h3 class="page-header">
+                                <i class="fa fa-heartbeat"></i> Contact person in case of emergency
+                                <!-- <small class="pull-right">Contact person in case of emergency</small> -->
+                            </h3>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Contact Name</label>                            
+                                <div class="col-sm-4">{{=form.custom.widget.emergency_contant_name}}<small><i>In case of emergency</i></small></div>         
+                                <label class="col-sm-2 control-label">Contact No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.emergency_contact_no}}<small><i>In case of emergency</i></small></div>
+                            </div>                    
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Relationship</label>
+                                <div class="col-sm-4">{{=form.custom.widget.emergency_relationship}}<small><i>In case of emergency</i></small></div>
+                                <label class="col-sm-2 control-label">Next of Ken</label>
+                                <div class="col-sm-4">{{=form.custom.widget.next_of_ken}}<small><i>In case of emergency</i></small></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Residence Permit No</label>
+                                <div class="col-sm-4">{{=form.custom.widget.residence_no}}</div>
+                                <label class="col-sm-2 control-label">RP Date</label>
+                                <div class="col-sm-4">{{=form.custom.widget.residence_no_date}}</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">RP Date Expiration</label>
+                                <div class="col-sm-4">{{=form.custom.widget.residence_no_date_expiration}}</div>
+                            </div>    
+                            <h3 class="page-header"></h3>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Languages</label>
+                                <div class="col-sm-4">{{=form.custom.widget.languages}}</div>                               
+                            </div>                    
+                        </div>
+
+                    </div>  
+                    <div class="tab-pane" id="leave_history"> 
+                        {{=LOAD('leave_mngt','get_employee_master_leave_history_id.load', args = request.args(0),extension=False,target="tblLH")}}
+                    </div>
+                    <div class="tab-pane" id="upload_files">
+                        {{=LOAD('hris','get_employee_master_upload_file_id.load', ajax='true', args = request.args(0),extension=False)}}
+                    </div>
+                    <div class="tab-pane" id="self_service">
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs pull-right">
+                                <!-- <li class="active"><a href="#leave_history" data-toggle="tab" aria-expanded="true">Leave History</a></li> -->
+                                <li class=""><a href="#year_end_leave_chart" data-toggle="tab" aria-expanded="false">Year End Leave Chart</a></li>
+                                <li class=""><a href="#salary_adjustment" data-toggle="tab" aria-expanded="false">Salary Adjustment</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="year_end_leave_chart">                                    
+                                    {{=LOAD('leave_mngt','get_year_end_leave_chart_id.load', ajax = True, args=request.args(0), target='container')}}
+                                </div>
+                                <div class="tab-pane" id="salary_adjustment">                                    
+                                    {{=LOAD('leave_mngt','get_employee_salary_adjustment_id.load', args=request.args(0))}}
+                                </div>                                
+                                <div class="tab-pane" id="petty_cash">
+                                    <div class="callout callout-warning">                                                  
+                                        <p>on progress.</p>
+                                    </div>                                    
+    
+                                </div>
+                                <div class="tab-pane" id="cash_advanced">                                    
+                                    <div class="callout callout-warning">
+                                        <p>on progress.</p>
+                                    </div>                                    
+                                </div>        
+                                <div class="tab-pane" id="company_loan">                                    
+                                    <div class="callout callout-warning">
+                                        <p>on progress.</p>
+                                    </div>                                    
+                                </div>                                                           
+                                <!-- /.tab-pane -->
+                            </div>
+                                <!-- /.tab-content -->
+                        </div>                        
+                    </div>                                                       
+                </div>    
+                <!-- {{=form.custom.end}}                                          -->
+            </div>    
+        </div>        
+    </div>
+</section>
+
+<script src="{{=URL('static','dist/js/select2.full.min.js')}}"></script>
+
+<script>
+$(document).ready(function(){
+    var profile = $('#Employee_Master_first_name').val() + ' ' +$('#Employee_Master_middle_name').val() + ' ' +$('#Employee_Master_last_name').val() 
+    // var e = $('#no_table_designation_code_id').value()
+    // var opt = e.options[e.selectedIndex].value document.getElementById("ddlViewBy").value;
+    $('#profile_name').html(profile)
+    $('#profile_designation').html($("#Employee_Master_designation_code_id  :selected").text())
+    $('#profile_employee_no').html($("#Employee_Master_employee_no").val())
+    $('#profile_account_code').html($("#Employee_Master_account_code").val())
+    $('#profile_education').html($("#Employee_Master_education_qualification").val())
+    $('#profile_department').html($("#Employee_Master_department_code_id  :selected").text())
+    $('#profile_nationality').html($("#Employee_Master_nationality  :selected").text())
+    // $("#Employee_Master :input").attr("disabled", true);
+    $('#basic_information *').prop('disabled', true);
+    $('#professional_information *').prop('disabled', true);
+    $('#address_details *').prop('disabled', true);
+    $('#account_details *').prop('disabled', true);
+    $('#employment_details *').prop('disabled', true);    
+    $('#other_details *').prop('disabled', true);
+    $('#upload_files *').prop('disabled', true);
+    $('#btnSalaryHistory *').prop('enabled', true);
+    
+    
+
+    
+
+    $(".table").DataTable();    
+    $("#btnSalaryHistory").click(function(){        
+        alertify.alert().set({'startMaximized':true, 'title':'Salary History','message':'{{=LOAD('hris','get_salary_history_id', args = request.args(0))}}'}).show(); 
+    });
+});
+</script>

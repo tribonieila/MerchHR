@@ -1,0 +1,236 @@
+<style>
+.calendar {
+  display:block!important;
+  border: none;
+
+}  
+</style>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.css" />  
+<div class="col-xs-12">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title">Employee Self-Service<small> Grid</small></h3>
+        </div>
+        <div class="box-body">
+            <div class="form-horizontal">             
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Transaction No.</label>                            
+                    <div class="col-sm-4"><input class="form-control" type="text" value={{=_id.transaction_no}} readonly></div>                            
+                    <label class="col-sm-2 control-label">Transaction Date</label>
+                    <div class="col-sm-4"><input class="form-control" type="text" value={{=_id.application_date}} readonly></div>
+                </div>                       
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Employee Name</label>
+                    <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.employee_id.first_name}} {{=_id.employee_id.middle_name}} {{=_id.employee_id.last_name}}" readonly></div>                                                        
+                    <label class="col-sm-2 control-label">Replacement</label>
+                    {{ if not _id.replacement: }}
+                        <div class="col-sm-4"><input text="text" class="form-control" value="None" readonly></div>
+                    {{ else: }}
+                        <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.replacement.first_name}} {{=_id.replacement.middle_name}} {{=_id.replacement.last_name}}" readonly></div>
+                    {{ pass }}    
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Type of Leave</label>
+                    <div class="col-sm-2"><input text="text" class="form-control" value="{{=_id.type_of_leave_id.type_of_leave}}" readonly></div>
+                    <div class="col-sm-2">
+                        {{ if _id.type_of_leave_id == 3: }}
+                            {{ if _id.medical_file == '': }}
+                                <a class="btn btn-default btn-flat disabled"><i class="fa fa-user-md"></i> No Medical Certificate</a>                                        
+                            {{ else: }}
+                                <a class="btn btn-default btn-flat" href="{{=URL('default', 'download', args=_id.medical_file)}}"><i class="fa fa-user-md"></i> With Medical Certificate</a>                                                                                
+                            {{ pass }}
+                        {{ pass }}
+                    </div>
+                    <label class="col-sm-2 control-label">Duration</label>{{ import locale}}                    
+                    <div class="col-sm-2"><input text="text" class="form-control" value="{{=locale.format("%.1f",_id.duration_leave or 0, grouping = True)}}" readonly></div>
+
+                </div>                                
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">From</label>
+                    <div class="col-sm-4"><input text="date" class="form-control" value="{{=_id.from_effective_date.strftime('%d-%b-%Y')}}" readonly></div>
+                    <label class="col-sm-2 control-label">To</label>
+                    <div class="col-sm-4"><input text="date" class="form-control" value="{{=_id.to_effective_date.strftime('%d-%b-%Y')}}" readonly></div>
+                    
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Remarks</label>
+                    <div class="col-sm-4">
+                        <input text="text" class="form-control" value="{{=_id.remarks}}" readonly>
+                        
+                    </div>                                                            
+                    <label class="col-sm-2 control-label">Status</label>
+                    <div class="col-sm-4"><input text="text" class="form-control" value="{{=_id.status_id.status}}" readonly></div>                                                
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Dept. Remarks</label>
+                    <div class="col-sm-4"><input class="form-control" name="dept_remarks" value="{{=_id.dept_remarks}}" readonly></div>                                                            
+                    <label class="col-sm-2 control-label"></label>
+
+                    <div class="col-sm-4">
+                        {{ if auth.has_membership(role = 'MANAGEMENT'): }}
+                            {{ if (_id.status_id == 9) or (_id.status_id == 10) or (_id.status_id == 11) or (_id.status_id == 16): }}                                
+                                <input class="btn btn-success btn-flat" id="mngr_approved" type="button" value="Approved" disabled = "True">
+                                <input class="btn btn-warning btn-flat" id="mngr_rejected" type="button" value="Reject" disabled = "True">
+                                <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid', extension = False)}}">                        
+                                <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                                {{ if _id.created_by == auth.user_id:}}
+                                    <input class="btn btn-danger btn-flat" type="button" value="Cancel Application" id="btnCancel">
+                                {{ pass }}
+                            {{ else: }}                                
+                                <input class="btn btn-success btn-flat" id="mngr_approved" type="button" value="Approved">
+                                <input class="btn btn-warning btn-flat" id="mngr_rejected" type="button" value="Reject">
+                                <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid', extension = False)}}">
+                                <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                                {{ if _id.created_by == auth.user_id:}}
+                                    <input class="btn btn-danger btn-flat" type="button" value="Cancel Application" id="btnCancel">
+                                {{ pass }}
+                                
+                            {{ pass }}
+
+                        {{ elif auth.has_membership(role = 'HR MANAGER'): }}
+                            {{ if _id.status_id > 5: }}
+                            <input class="btn btn-success btn-flat" id="hr_approved" type="button" value="Approved" disabled = "True">
+                            <input class="btn btn-warning btn-flat" id="hr_rejected" type="button" value="Reject" disabled = "True">
+                            
+                            <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                            
+                            <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_hr_leave_grid', extension = False)}}">
+                            {{ else: }}
+                            <input class="btn btn-success btn-flat" id="hr_approved" type="button" value="Approved">
+                            <input class="btn btn-warning btn-flat" id="hr_rejected" type="button" value="Reject">
+                            
+                            <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                            
+                            <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_hr_leave_grid', extension = False)}}">
+                            {{ pass }}
+
+                        {{ elif auth.has_membership(role = 'DEPARTMENT MANAGERS'): }}               
+                            {{ if _id.status_id == 4: }}                     
+                                <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved" disabled="True">
+                                <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject" disabled="True">
+                                <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_dept_leave_grid', extension = False)}}">
+                            {{ else: }}
+                                <input class="btn btn-success btn-flat" id="department_approved" type="button" value="Approved" onclick="ajax('{{=URL('leave_mngt','put_application_dept_leave_id_approved', args = request.args(0))}}')">
+                                <input class="btn btn-warning btn-flat" id="department_rejected" type="button" value="Reject" onclick="ajax('{{=URL('leave_mngt','put_application_dept_leave_id_rejected', args = request.args(0))}}')">
+                                <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_dept_leave_grid', extension = False)}}">
+                            {{ pass }}
+                        {{ else: }}
+                            <input class="btn btn-primary btn-flat" type="button" value="Back" onclick=window.location="{{=URL('leave_mngt','get_application_leave_grid', extension = False)}}">
+                            <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                        {{ pass }}
+                    </div>
+                </div>      
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">HR Remarks</label>
+                    {{ if auth.has_membership(role = 'HR MANAGER'): }}                        
+                        <div class="col-sm-4">                               
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="hr_remarks" placeholder="type your remarks here..." value={{=_id.hr_remarks}}>
+                                    <span class="input-group-addon btn btn-primary" id="btnHRRemarks">Save</span>
+                            </div>                                        
+                        </div>  
+                    {{ else: }}
+                        <div class="col-sm-4"><input class="form-control" name="hr_remarks" value="{{=_id.hr_remarks}}" readonly></div>  
+                    {{ pass }}
+                </div>                                    
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Mngt Remarks</label>
+                    {{ if auth.has_membership(role = 'MANAGEMENT'): }}                        
+                        <div class="col-sm-4">                        
+                            <div class="input-group">
+                                <textarea class="form-control"  tabindex="0" style="resize:none" name="mngt_remarks" placeholder="type your remarks here...">{{=_id.mngt_remarks}}</textarea>  
+                                <span class="input-group-addon btn btn-primary" id="btnMngtRemarks">Save</span>
+                            </div>                        
+                        </div>  
+                    {{ else: }}
+                        <div class="col-sm-4">
+                            <textarea rows="4" cols="60" name="mngt_remarks" readonly>{{=_id.mngt_remarks}}</textarea>
+                        </div>  
+                    {{ pass }}
+                </div>                        
+
+            </div>                    
+        </div>
+    </div>
+</div>     
+ 
+<script src="https://unpkg.com/js-year-calendar@latest/dist/js-year-calendar.min.js"></script>   
+<script> 
+$(document).ready(function(){
+    $("#btnHRRemarks").click(function(){
+        console.log('hr remarks');
+        ajax('{{=URL('leave_mngt','put_application_hr_remark_id', args = request.args(0), extension = False)}}', ['hr_remarks'])
+    });
+    $("#btnMngtRemarks").click(function(){
+        console.log('ok na');
+        ajax('{{=URL('leave_mngt','put_application_mngt_leave_id_remarks', args = request.args(0), extension = False)}}', ['mngt_remarks'])
+    });
+    $("#btnHistory").click(function(){        
+         alertify.alert().set({'startMaximized':true, 'title':'Leave History','message':'{{=LOAD('leave_mngt','get_view_leave_history_id', args = request.args(0))}}'}).show();
+    });
+    
+    $("#department_approved, #department_rejected").click(function(){
+        window.location="{{=URL('leave_mngt','get_application_dept_leave_grid',extension = False)}}"
+    });
+
+    $("#hr_approved").click(function(){       
+        alertify.confirm('Leave Application', 'Confirmation for approval.',
+            function(){                 
+                ajax('{{=URL('leave_mngt','put_application_hr_leave_id_approved', args = request.args(0), extension = False)}}')
+                window.location="{{=URL('leave_mngt','get_application_hr_leave_grid',extension = False)}}"        
+            }, 
+            function(){ alertify.error('Cancel')});               
+    });
+    $("#hr_rejected").click(function(){
+        alertify.confirm( 'Leave Application', 'Confirm for rejection',
+               function() {
+                    ajax('{{=URL('leave_mngt','put_application_hr_leave_id_rejected', args = request.args(0), extension = False)}}')                     
+                    window.location="{{=URL('leave_mngt','get_application_hr_leave_grid', extension = False)}}"                               
+                   }
+               , function() { alertify.error('Cancel') });        
+    });    
+
+    $("#mngr_approved").click(function(){ 
+        alertify.confirm('Leave Application', 'Confirm for approval.', 
+            function(){ 
+                    ajax('{{=URL('leave_mngt','get_application_mngt_leave_id_approved', args = request.args(0), extension = False)}}', ['mngt_remarks'])
+                    
+                }, 
+            function(){ alertify.error('Cancel')}); 
+    });
+    new Calendar(document.querySelector('#Mycalendar'));
+    $("#btnChart").click(function(){        
+        alertify.alert().set({'startMaximized':true,'title':'Leave Chart','message': '{{=LOAD('leave_mngt','get_application_dept_leave_chart',ajax='true', args = request.args(0))}}' ,
+        }).show();
+    });
+    
+    $("#mngr_rejected").click(function(){ 
+        alertify.confirm('Leave Application', 'Confirm for rejection.', 
+            function(){ 
+                    ajax('{{=URL('leave_mngt','get_application_mngt_leave_id_rejected', args = request.args(0), extension = False)}}', ['mngt_remarks'])
+                    window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid', extension = False)}}"
+                }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnCancel").click(function(){
+        alertify.confirm('Leave Application', 'This application will remove to your grid.', 
+        function(){             
+            ajax('{{=URL('leave_mngt','put_application_leave_id_cancelled', args = request.args(0))}}')
+            window.location="{{=URL('default','#')}}"
+        }, 
+        function(){ alertify.error('Cancel')});
+        
+    });    
+
+});
+    function GenerateMemo(){
+        console.log("GenerateMemo")        
+        window.open("{{=URL('leave_mngt_reports','get_application_leave_report_id', args = request.args(0), extension = False)}}");
+        window.location="{{=URL('leave_mngt','get_application_mngt_leave_grid', extension = False)}}"
+        
+
+    };
+</script>
+

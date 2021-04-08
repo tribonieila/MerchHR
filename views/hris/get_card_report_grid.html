@@ -1,0 +1,47 @@
+{{extend 'layout.html'}}
+<script>
+    {{=ASSIGNJS(
+        w2p_ajax_date_format = T('%Y-%m-%d'),
+        w2p_ajax_datetime_format = T('%Y-%m-%d %H:%M:%S')
+    )}}
+    </script>
+<section class="content-header">
+    <h1>Reports<small>Grid</small></h1>
+</section>
+<div class="col-md-12">    
+    <div class="nav-tabs-custom"> 
+      <ul class="nav nav-tabs pull-right">
+        <li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="true">Residence Permit</a></li>
+        <li class=""><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">Driver's License</a></li>
+        <li class=""><a href="#tab_3-3" data-toggle="tab" aria-expanded="false">Passport's</a></li>
+        <li class=""><a href="#tab_4-4" data-toggle="tab" aria-expanded="false">Health Card</a></li>
+        <li class=""><a href="#tab_5-5" data-toggle="tab" aria-expanded="false">Medical Health Card</a></li>
+        <li class=""><a href="#tab_6-6" data-toggle="tab" aria-expanded="false">Labour Card</a></li>
+
+        <li class="pull-left header"><i class="fa fa-th"></i> ID's</li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab_1-1">
+            {{=LOAD('hris','get_residence_permit_report_grid.load')}}
+        </div>        
+        <div class="tab-pane" id="tab_2-2">
+            {{=LOAD('hris','get_drivers_license_report_grid.load')}}
+        </div>        
+        <div class="tab-pane" id="tab_3-3">
+            {{=LOAD('hris','get_passport_report_grid.load')}}
+        </div>
+        <div class="tab-pane" id="tab_4-4">
+            {{=LOAD('hris','get_health_card_report_grid.load')}}
+        </div>        
+        <div class="tab-pane" id="tab_5-5">
+            {{=LOAD('hris','get_medical_health_card_report_grid.load')}}
+        </div>        
+        <div class="tab-pane" id="tab_6-6">
+            {{=LOAD('hris','get_labour_card_report_grid.load')}}
+        </div>        
+      </div>    
+    </div>    
+</div>
+
+
+

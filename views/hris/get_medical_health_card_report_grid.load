@@ -1,0 +1,24 @@
+<div id="medtoolbar">
+    <input type="button" id="btnMedUpdate" class="btn btn-success btn-flat" value="Update Date">              
+    <input type="button" id="btnMedPrint" class="btn btn-warning btn-flat" value="Print">              
+</div>    
+{{=table}}
+<script>
+    $("#btnMedUpdate").click(function(){        
+        alertify.confirm('Reports', 'Update expired date?', 
+            function(){                 
+                ajax('{{=URL('hris','put_medical_health_card_report_grid')}}', ['med','medical_health_card_cert_no_expiration_date']),
+                alertify.success('Updated') 
+                window.location.reload();
+            }, 
+            function(){ alertify.error('Cancel')});
+    });
+    $("#btnMedPrint").click(function(){        
+        alertify.confirm('Reports', 'Print expired date?', 
+            function(){                            
+                window.open('{{=URL('hris_reports','get_cards_report', args = 5, extension = False)}}'),
+                alertify.success('Updated') 
+            }, 
+            function(){ alertify.error('Cancel')});
+    });       
+</script>

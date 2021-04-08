@@ -1,0 +1,88 @@
+{{extend 'layout.html'}}
+{{ from datetime import date, datetime, timedelta }}
+<section class="content-header">
+    <h1>Employee Self-Service<small>Grid</small></h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Form</h3>
+                    <div class="pull-right"><a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a></div>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        {{=form.custom.begin}}     
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Transaction No.</label>                            
+                            <div class="col-sm-2"><input class="form-control" id="transaction_no" name="transaction_no" type="text" value={{=ctr}} readonly></div>                            
+                            <label class="col-sm-4 control-label">Transaction Date</label>
+                            <div class="col-sm-2"><input class="form-control" id="transaction_date" name="transaction_date" type="text" value={{=request.now.strftime('%m-%d-%Y')}} readonly></div>
+                        </div>                   
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label>
+                            <div class="col-sm-4">{{=form.custom.widget.employee_id}}</div>    
+                            <label class="col-sm-2 control-label">Effective Date</label>
+                            <div class="col-sm-2">{{=form.custom.widget.effectivity_date}}</div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Basic Income</label>
+                            <div class="col-sm-2">{{=form.custom.widget.basic_income}}</div>
+                            <label class="col-sm-1">Adjustment Type</label>
+                            <div class="col-sm-1">{{=form.custom.widget.adjustment_type}}</div>
+                            <label class="col-sm-2 control-label">Housing Allowances</label>
+                            <div class="col-sm-2">{{=form.custom.widget.housing_allowances}}</div>                              
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Car Allowances</label>
+                            <div class="col-sm-2">{{=form.custom.widget.car_allowances}}</div>                            
+                            <label class="col-sm-4 control-label">Petrol Allowances</label>
+                            <div class="col-sm-2">{{=form.custom.widget.petrol_allowances}}</div>                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Food Allowances</label> 
+                            <div class="col-sm-2">{{=form.custom.widget.food_allowances}}</div>        
+                            <label class="col-sm-4 control-label">Others</label>
+                            <div class="col-sm-2">{{=form.custom.widget.others}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Incentives</label>
+                            <div class="col-sm-2">{{=form.custom.widget.incentive}}</div>        
+                            <label class="col-sm-4 control-label">Mobile Allowances</label>
+                            <div class="col-sm-2">{{=form.custom.widget.mobile_allowances}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>        
+                            <label class="col-sm-2 control-label">Status</label>
+                            <div class="col-sm-4">{{=form.custom.widget.status_id}}</div>
+                        </div>
+
+                            <label class="col-sm-8 control-label"></label>
+                            <div class="col-sm-4">
+                                <input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
+                                <input class="btn btn-danger btn-flat" type="button" value="Abort" id="btnAbort">
+                            </div>                            
+                        </div>
+
+                        {{=form.custom.end}}        
+                    </div>                    
+                </div>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){    
+    $("#Salary_Adjustment_employee_id").change(function(){    
+        ajax("{{=URL('leave_mngt','get_salary_details_id')}}", ['employee_id'])
+    });
+    $("#btnAbort").click(function(){
+        window.location.replace("{{=URL('leave_mngt','get_salary_adjustment_grid')}}")
+    });
+});
+</script>
+

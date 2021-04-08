@@ -1,0 +1,219 @@
+{{extend 'layout.html'}}
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Employee Self-Service <small>Form</small></h3>
+                    <div class="pull-right"><a href="#" id="btnRefresh" class="text-muted"><i class="fa fa-refresh"></i></a></div>
+                </div>
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        {{=form.custom.begin}}     
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Transaction No.</label>                            
+                            <div class="col-sm-2"><input class="form-control" id="Employee_Master_Leave_Temporary_transaction_no" name="transaction_no" type="text" value={{=ctr}} autocomplete="off" readonly></div>                            
+                            <label class="col-sm-4 control-label">Transaction Date</label>
+                            <div class="col-sm-2"><input class="form-control" id="Employee_Master_Leave_Temporary_application_date" name="application_date" type="text" value={{=request.now.strftime('%m-%d-%Y')}} autocomplete="off" readonly></div>
+                        </div>                   
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Employee Name</label>
+                            <div class="col-sm-4">{{=form.custom.widget.employee_id}}</div>    
+                            <label class="col-sm-2 control-label">Replacement</label>
+                            <div class="col-sm-4">{{=form.custom.widget.replacement}}</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Type of Leave</label>
+                            <div class="col-sm-4">{{=form.custom.widget.type_of_leave_id}}</div>
+                            <label class="col-sm-2 control-label">Duration</label>
+                            <div class="col-sm-2">{{=form.custom.widget.duration_leave}}</div>                              
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">From</label>
+                            <div class="col-sm-2">{{=form.custom.widget.from_effective_date}}</div>
+                            
+                            <label class="col-sm-4 control-label">To</label>
+                            <div class="col-sm-2"><input class="form-control" id="Employee_Master_Leave_to_effective_date" name="to_effective_date" type="text" value={{=request.now.strftime('%m-%d-%Y')}} readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Remarks</label>
+                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>        
+                            <label class="col-sm-2 control-label">Status</label>
+                            <div class="col-sm-4">{{=form.custom.widget.status_id}}</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <div id="upload_medical_file">
+                                    <label class="col-sm-4 control-label">Upload Medical File (pdf)</label>
+                                    <div class="col-sm-6">{{=form.custom.widget.medical_file}}</div>                                    
+                                </div>
+                                <div id="upload_maternity_file">
+                                    <label class="col-sm-4 control-label">Upload Maternity File (pdf)</label>
+                                    <div class="col-sm-6">{{=form.custom.widget.maternity_file}}</div>                                    
+                                </div>                                
+                                <div id="leave_in_cash">
+                                    <label class="col-sm-4 control-label">Leave Encashment</label>
+                                    <div class="col-sm-8">{{=form.custom.widget.leave_encashment}}<label class="form-check-label">Please put tick mark if you want to encash this leave.</label></div>
+                                </div>
+
+                            </div>
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
+                                <input class="btn btn-danger btn-flat" type="button" value="Abort" id="btnAbort">
+                            <input class="btn btn-success btn-flat" type="button" value="Leave History" id="btnHistory">
+                                
+                            </div>
+                        </div>
+            
+                        {{=form.custom.end}}        
+                    </div>                    
+                </div>
+            </div>            
+            <div class="row">
+                <div id="history"></div>               
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-default"> 
+                        <div id="leave_history"></div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+$(document).ready(function(){    
+    var _emp = $("#Employee_Master_Leave_employee_id").val(); 
+    var pre = document.createElement('leave_history');
+    pre.appendChild(document.createTextNode($('#leave_history').text()));        
+ 
+    // console.log(_emp);
+    
+    $("#history, #other_history, #leave_history, #upload_medical_file, #leave_in_cash, #upload_maternity_file").hide();
+    $("#Employee_Master_Leave_return_date, #return_date_label").attr('disabled','disabled');
+    $("#Employee_Master_Leave_type_of_leave_id, #Employee_Master_Leave_employee_id, #Employee_Master_Leave_from_effective_date").change(function(){
+        if ($("#Employee_Master_Leave_type_of_leave_id").val() && $("#Employee_Master_Leave_employee_id").val()) {            
+            $("#history").fadeIn();
+
+            if ($("#Employee_Master_Leave_type_of_leave_id").val() == 1) {
+                $("#leave_in_cash").fadeIn();        
+                // $("#upload_medical_file").fadeOut();  
+            } else {                
+                $("#leave_in_cash").fadeOut();        
+            }
+
+            if ($("#Employee_Master_Leave_type_of_leave_id").val() == 6) {
+                $("#upload_maternity_file").fadeIn();     
+                $("#Employee_Master_Leave_duration_leave").val(50.0);   
+                compute()
+                // $("#leave_in_cash").fadeOut();        
+                // $("#upload_medical_file").fadeOut();  
+            } else {                
+                $("#upload_maternity_file").fadeOut();  
+                // $("#leave_in_cash").fadeOut(); 
+                // $("#upload_medical_file").fadeOut();        
+            }
+
+            if ($("#Employee_Master_Leave_type_of_leave_id").val() == 3) {
+                // $("#leave_in_cash").fadeOut();              
+                $("#upload_medical_file").fadeIn();        
+            } else {
+                $("#upload_medical_file").fadeOut();                         
+            }
+
+            ajax("{{=URL("leave_mngt","get_application_history_id")}}",['employee_id','type_of_leave_id', 'from_effective_date'],'history')
+            ajax("{{=URL("leave_mngt","get_form_leave_history_id")}}",['employee_id'],'leave_history')
+             
+        } else {            
+            $("#history, #leave_history, #upload_medical_file, #leave_in_cash").fadeOut();
+        }
+
+    });
+    $("#Employee_Master_Leave_leave_encashment").click(function(){
+        if ($("#Employee_Master_Leave_leave_encashment").prop("checked") == true) {
+            $("#Employee_Master_Leave_remarks").val("Leave Encashment");        
+        } else {
+            $("#Employee_Master_Leave_remarks").val("");
+        }
+        
+    });
+    $("#Employee_Master_Leave_from_effective_date, #Employee_Master_Leave_duration_leave").focusout(function(){
+        compute();
+        ajax("{{=URL("leave_mngt","get_application_history_id")}}",['employee_id','type_of_leave_id', 'from_effective_date'],'history')        
+        ajax("{{=URL("leave_mngt","get_form_leave_history_id")}}",['employee_id'],'leave_history')
+        var pre = document.createElement('leave_history');
+        pre.appendChild(document.createTextNode($('#leave_history').text()));        
+
+    });
+    $("#Employee_Master_Leave_from_effective_date, #Employee_Master_Leave_duration_leave").change(function(){        
+        var res = ""        
+        var start_date      =  new Date($("#Employee_Master_Leave_from_effective_date").val());
+        var new_days        =  new Date(start_date);
+        var end_date        =  new Date($("#Employee_Master_Leave_to_effective_date").val());
+        var duration        = $("#Employee_Master_Leave_duration_leave").val();
+        var joining_date    =  new Date($("#Employee_Master_Leave_return_date").val());
+        var _duration = 0;
+        if (duration < 1) {
+            _duration = 1
+        } else if (duration == 1.5 ) {
+            _duration = 3;            
+        } else {
+            _duration = duration;
+        }        
+        new_days.setDate(start_date.getDate() + (_duration - parseInt(1)))
+        format_days =  (new_days.getDate()+'-'+new_days.getMonth()+1)+'-'+new_days.getFullYear()
+        $("#Employee_Master_Leave_to_effective_date").val(format_days);        
+    });
+
+    $("#btnAbort").click(function(){
+        window.location="{{=URL('default','#')}}"
+    });
+    
+    $("#Employee_Master_Leave_employee_id").change(function(){
+        var _emp = $("#Employee_Master_Leave_employee_id").val();
+        compute();
+        ajax("{{=URL("leave_mngt","get_application_history_id")}}",['employee_id','type_of_leave_id', 'from_effective_date'],'history')
+    }).change();
+//   $(".BtnView").click(function(){  
+  
+  
+    $("#btnHistory").click(function(){                
+        $("#leave_history").fadeIn();        
+        // var _employee_id = $("#Employee_Master_Leave_employee_id").val();
+        // var pre = document.createElement('leave_history');
+        // pre.appendChild(document.createTextNode($('#leave_history').text()));        
+
+        // ajax("{{=URL("leave_mngt","get_form_leave_history_id")}}",['employee_id'], 'leave_history')        
+        // alertify.alert().set({'startMaximized':true, 'title':'Leave History','message':pre}).show();
+    });
+
+    $("#btnRefresh").click(function(){
+        window.location.reload();
+    });    
+       
+});
+    function compute(){
+        // console.log('computed date');
+        var res = ""        
+        var start_date      =  new Date($("#Employee_Master_Leave_from_effective_date").val());
+        var new_days        =  new Date(start_date);
+        var end_date        =  new Date($("#Employee_Master_Leave_to_effective_date").val());
+        var duration        = $("#Employee_Master_Leave_duration_leave").val();
+        var joining_date    =  new Date($("#Employee_Master_Leave_return_date").val());
+        var _duration = 0;
+        if (duration < 1) {
+            _duration = 1
+        } else if (duration == 1.5 ) {
+            _duration = 3;            
+        } else {
+            _duration = duration;
+        }        
+        new_days.setDate(start_date.getDate() + (_duration - parseInt(1)))
+        format_days =  (new_days.getMonth()+1)+'-'+new_days.getDate()+'-'+new_days.getFullYear()
+        $("#Employee_Master_Leave_to_effective_date").val(format_days);            
+    }
+</script>
+

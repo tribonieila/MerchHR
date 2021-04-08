@@ -1,0 +1,22 @@
+{{extend 'layout.html'}}
+<section class="content-header">
+  <h1>Core HR<small>Grid</small></h1>
+</section>
+<section class="content">
+  <div class="row">      
+    <div class="col-xs-12">      
+      <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Users Manager's Assignment</h3>                    
+        </div>
+        <div class="box-body">           
+            {{=table}}
+            {{=grid}}
+        </div>
+        <div class="box-footer clearfix">
+          <a href="{{=URL('leave_mngt','post_application_leave')}}" type="button" class="btn btn-primary btn-flat pull-right">Place New Department Head</a>                                
+        </div>               
+      </div>
+    </div>
+  </div>
+</section>
