@@ -316,7 +316,7 @@ def post_application_leave():
         _user = _usr.employee_id
         _assi = _usr.sub_department_id
     
-    if auth.has_membership(role = 'BACK OFFICE DEPARTMENT'):               
+    if auth.has_membership(role = 'BACK OFFICE DEPARTMENT'):
         _default_status = 1
         _status = db.Leave_Status.id == 1
         _leave =  (db.Type_Leave.id != 8) & (db.Type_Leave.id != 9) & (db.Type_Leave.id != 10) & (db.Type_Leave.id != 11) 
@@ -384,7 +384,7 @@ def post_application_leave():
         elif auth.has_membership(role = 'MANAGEMENT'):
             redirect(URL('leave_mngt','get_application_mngt_leave_grid'))
         elif auth.has_membership(role = 'BACK OFFICE DEPARTMENT'):            
-            _usr = db(db.Back_Office_Assignment.users_id == auth.user_id).select().first()            
+            _usr = db(db.Back_Office_Assignment.users_id == auth.user_id).select().first()
             _dha = db((db.Department_Head_Assignment.back_office_code_id == _usr.back_office_code_id) & (db.Department_Head_Assignment.status_id == 1)).select().first()
             _to  = db(db.auth_user.id == _dha.users_id).select().first()
             _eml = db(db.Email_Notification).select().first()
@@ -469,11 +469,11 @@ def get_application_history_id(): #form entry
     _ctr = db((db.Employee_Master_Leave.employee_id == request.vars.employee_id) & (db.Employee_Master_Leave.status_id <= 9)).count()
     _pending = db((db.Employee_Master_Leave.employee_id == request.vars.employee_id) & (db.Employee_Master_Leave.type_of_leave_id == request.vars.type_of_leave_id) & (db.Employee_Master_Leave.status_id <= 9)).count()
     
-    if not ((_count) or (_appli)):
+    if not ((_count) or (_appli) or (_ctr) or (_pending)):
         _count = _appli = 0 
     _balanced = _paid_leave = 0
     
-    _title = str(_tl.type_of_leave) + ' Information'         
+    _title = str(_tl.type_of_leave) + ' Information'
     # print _title
     _table_id = DIV(TABLE(TBODY(TR(TH('Card Name'),TH('Card #'),TH('Date Issued'),TH('Date Expiration')),
     TR(TD('Residence Permit'),TD(_id.residence_permit_no),TD(_id.residence_no_date),TD(_id.residence_permit_no_expiration_date)),
@@ -482,15 +482,20 @@ def get_application_history_id(): #form entry
     TR(TD('Driver License'),TD(_id.driver_license_no),TD(),TD(_id.driver_license_no_expiration_date))),_class='table'),_class='info-box bg-green')    
     _emergency = 0
     if int(request.vars.type_of_leave_id) == 1 or int(request.vars.type_of_leave_id) == 8 or int(request.vars.type_of_leave_id) == 9:# annual leave, resignation, end of services
-        for n in db((db.Employee_Master_Leave.employee_id == request.vars.employee_id) & (db.Employee_Master_Leave.status_id == 16) & (db.Employee_Master_Leave.type_of_leave_id == 5)).select():            
-            # print ':', n.id, _no.date_last_return, n.from_effective_date, n.duration_leave
-            if n.from_effective_date > _no.last_joining_date:
-                _emergency += n.duration_leave or 0
-            # if not _no.date_last_return > n.from_effective_date:
-            #     _emergency += n.duration_leave or 0
-            # else:
-            #     _emergency += n.duration_leave or 0
-        
+        _id = db(db.Employee_Master_Leave.employee_id == request.vars.employee_id).select().first()
+        if not _id:
+            _emergency = 0
+            print 'empty',_no.date_joined
+        else:            
+            for n in db((db.Employee_Master_Leave.employee_id == request.vars.employee_id) & (db.Employee_Master_Leave.status_id == 16) & (db.Employee_Master_Leave.type_of_leave_id == 5)).select():            
+                # print ':', n.id, _no.date_last_return, n.from_effective_date, n.duration_leave
+                if n.from_effective_date > _no.last_joining_date:
+                    _emergency += n.duration_leave or 0
+                # if not _no.date_last_return > n.from_effective_date:
+                #     _emergency += n.duration_leave or 0
+                # else:
+                #     _emergency += n.duration_leave or 0
+            
         _working_days = datetime.strptime(request.vars.from_effective_date, '%m-%d-%Y').date() - _no.last_joining_date
         
         _working_days = _working_days - timedelta(int(_emergency or 0))    
@@ -970,14 +975,13 @@ def get_employee_salary_adjustment_id():
     return XML(DIV(table))
 
 def get_year_end_leave_chart_id():
-    _id = db(db.Employee_Employment_Details.employee_id == request.args(0)).select().first() 
-    # print '-- #',_id.last_joining_date, '# --'
+    _id = db(db.Employee_Employment_Details.employee_id == request.args(0)).select().first()     
     _row = db(db.Employee_Master_Leave.employee_id == request.args(0)).select().first()
-    _sum = db.Employee_Master_Leave.duration_leave.sum().coalesce_zero()
-    _durationm = db((db.Employee_Master_Leave.employee_id == request.args(0)) & (db.Employee_Master_Leave.from_effective_date > _id.last_joining_date) & (db.Employee_Master_Leave.canceled == False)& (db.Employee_Master_Leave.status_id == 16)& (db.Employee_Master_Leave.type_of_leave_id < 8)).select(_sum).first()[_sum]
-    _query = db((db.Employee_Master_Leave.employee_id == int(request.args(0))) & (db.Employee_Master_Leave.from_effective_date > _id.last_joining_date) & (db.Employee_Master_Leave.canceled == False)& (db.Employee_Master_Leave.status_id == 16)& (db.Employee_Master_Leave.type_of_leave_id < 8)).select(db.Employee_Master_Leave.duration_leave.sum().coalesce_zero(), db.Employee_Master_Leave.type_of_leave_id, groupby = db.Employee_Master_Leave.type_of_leave_id)
-    # for n in _query:
-    #     print n[db.Employee_Master_Leave.duration_leave.sum().coalesce_zero()], n.Employee_Master_Leave.type_of_leave_id.type_of_leave
+    _sum = db.Employee_Master_Leave.duration_leave.sum().coalesce_zero()    
+    _joining_date = _id.last_joining_date
+    if _id.last_joining_date == None:
+        _joining_date = request.now    
+    _query = db((db.Employee_Master_Leave.employee_id == int(request.args(0))) & (db.Employee_Master_Leave.from_effective_date > _joining_date) & (db.Employee_Master_Leave.canceled == False)& (db.Employee_Master_Leave.status_id == 16)& (db.Employee_Master_Leave.type_of_leave_id < 8)).select(db.Employee_Master_Leave.duration_leave.sum().coalesce_zero(), db.Employee_Master_Leave.type_of_leave_id, groupby = db.Employee_Master_Leave.type_of_leave_id)        
     return dict(_query = _query, _sum = _sum)
 
 def get_employee_salary_adjustment_view_id():
@@ -1252,10 +1256,10 @@ def get_application_dept_leave_grid():
     row = []
     ctr = 0 
     _usr = db(db.Department_Users_Assignment.users_id == auth.user_id).select().first()
-    _dep = db(db.Department_Head_Assignment.users_id == auth.user_id).select().first()    
+    _dep = db((db.Department_Head_Assignment.users_id == auth.user_id) & (db.Department_Head_Assignment.status_id == 1)).select().first()    
     if auth.has_membership('DEPARTMENT MANAGERS'):              
         # if _dep.sub_department_id == 3: # check if fmcg sales manager log in
-        _query = db((((db.Employee_Master_Leave.manager_assigned == _dep.sub_department_id) & (db.Employee_Master_Leave.manager_assigned <= 6) & ((db.Employee_Master_Leave.status_id == 1) | (db.Employee_Master_Leave.status_id == 12)) ) | (db.Employee_Master_Leave.created_by == auth.user_id)) & (db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id != 16)).select(orderby = ~db.Employee_Master_Leave.id)
+        _query = db((((db.Employee_Master_Leave.manager_assigned == _dep.sub_department_id) & ((db.Employee_Master_Leave.status_id == 1) | (db.Employee_Master_Leave.status_id == 12)) ) | (db.Employee_Master_Leave.created_by == auth.user_id)) & (db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id != 16)).select(orderby = ~db.Employee_Master_Leave.id)
         # else:            
             # _query = db(((db.Employee_Master_Leave.manager_assigned == _dep.sub_department_id) | (db.Employee_Master_Leave.created_by == auth.user_id)) & (db.Employee_Master_Leave.canceled == False) & (db.Employee_Master_Leave.status_id != 16)).select(orderby = ~db.Employee_Master_Leave.id)
     elif auth.has_membership('BACK OFFICE DEPARTMENT'):          
@@ -1772,11 +1776,7 @@ def get_application_mngt_leave_grid():
         cale_lnk = A(I(_class='fa fa-calendar-check-o'), _title='Leave Chart', _type='button ', _role='button', _target='blank', _class='btn btn-icon-toggle', _href=URL('leave_mngt','get_application_dept_leave_chart_id', args = n.id))
         btn_lnk = DIV(view_lnk, edit_lnk, dele_lnk, prin_lnk, cale_lnk)
         _ei = db(db.Employee_Employment_Details.employee_id == n.employee_id).select().first()
-        if n.employe_id.middle_name == None:
-            _middle_name = ''
-        else:
-            _middle_name = n.employe_id.middle_name
-        _emp_na = n.employee_id.first_name, ' ',_middle_name, ' ' ,n.employee_id.last_name, ', ', SPAN(_ei.account_code,_class='text-muted')
+        _emp_na = n.employee_id.first_name, ' ',n.employee_id.last_name, ', ', SPAN(_ei.account_code,_class='text-muted')
         # row.append(TR(TD(ctr),TD(n.application_date),TD(n.type_of_leave_id.type_of_leave),TD(_emp_na),TD(843),TD(_emp_ds),TD(n.status_id.status),TD(n.status_id.action_required),TD(n.remarks),TD(btn_lnk)))
         if int(n.status_id) == 2:
             edit_lnk = A(I(_class='fa fa-pencil'), _title='Edit Row', _type='button  ', _role='button', _class='btn btn-icon-toggle', _href=URL('leave_mngt','put_application_leave_id', args = n.id))
@@ -2811,6 +2811,18 @@ def put_salary_adjustment_id():
     form = SQLFORM(db.Salary_Adjustment, request.args(0))
     if form.process().accepted:
         response.flash = 'FORM SAVE'
+        # update here the employee master account info
+        # db(db.Employee_Master_Account_Info.employe_id == _row.employe_id).update(
+        #     basic_income =  _row.basic_income,
+        #     housing_allowances = _row.housing_allowances,
+        #     car_allowances = _row.car_allowances,
+        #     petrol_allowances = _row.petrol_allowances,
+        #     food_allowances = _row.food_allowances,
+        #     others = _row.others,
+        #     incentive = _row.incentive,
+        #     mobile_allowances = _row.mobile_allowances,
+        #     total_gross_pay = _row.total_gross_pay,
+        #     net_pay = _row.net_pay)
         redirect(URL('leave_mngt','get_salary_adjustment_grid', args = 1))        
     elif form.errors:
         responnse.flash = 'FORM HAS ERROR'        
@@ -2839,19 +2851,29 @@ def put_salary_adjustment_mngt_remarks_id():
 def get_salary_details_id():    
     _id = db(db.Employee_Master_Account_Info.employee_id == request.vars.employee_id).select().first()    
     response.js = "jQuery($('#Salary_Adjustment_basic_income').val(%s), $('#Salary_Adjustment_housing_allowances').val(%s), $('#Salary_Adjustment_car_allowances').val(%s),$('#Salary_Adjustment_petrol_allowances').val(%s),$('#Salary_Adjustment_food_allowances').val(%s),$('#Salary_Adjustment_others').val(%s),$('#Salary_Adjustment_incentive').val(%s),$('#Salary_Adjustment_mobile_allowances').val(%s))" % (_id.basic_income, _id.housing_allowances, _id.car_allowances, _id.petrol_allowances, _id.food_allowances, _id.others, _id.incentive, _id.mobile_allowances)
-    
+
 def put_salary_adjustment_confirmation_id():
     _id = db(db.Salary_Adjustment.id == request.args(0)).select().first()
     _pre = db(db.Communication_Tranx_Prefix.prefix_key == 'MEM').select().first()
     _skey = _pre.serial_key
-    _skey += 1    
+    _skey += 1
     _usr_f = str(auth.user.first_name.upper())
     _usr_l = str(auth.user.last_name.upper())
     _ckey = str(_pre.prefix) + '/' + str(_skey) + '/' + str(date.today().strftime("%Y")) + '/' + _usr_f[:1] + _usr_l[:1]        
     if auth.has_membership(role = 'HR MANAGER'):                                    
         _pre.update_record(serial_key = _skey)      
         _id.update_record(doc_ref_no = _ckey, status_id = 5, hr_approved_by = auth.user_id)  
-        db.Memorandum.insert(memorandum_prefix_no_id = _pre.id,memorandum_no = _ckey,memorandum_date = request.now,memorandum_from = 'HUMAN RESOURCES',memorandum_to = str(_id.employee_id.first_name.upper()) + ' ' + str(_id.employee_id.last_name.upper()),memorandum_subject = 'SALARY ADJUSTMENT - ' + str(_id.employee_id.first_name.upper()) + ' ' + str(_id.employee_id.last_name.upper()),confidential = True)
+        db.Memorandum.insert(memorandum_prefix_no_id = _pre.id,memorandum_no = _ckey,memorandum_date = request.now,memorandum_from = 'HUMAN RESOURCES',memorandum_to = str(_id.employee_id.first_name.upper()) + ' ' + str(_id.employee_id.last_name.upper()),memorandum_subject = 'SALARY ADJUSTMENT - ' + str(_id.employee_id.first_name.upper()) + ' ' + str(_id.employee_id.last_name.upper()),confidential = True)        
+        db(db.Employee_Master_Account_Info.employee_id == _id.employee_id).update(
+            basic_income = _id.basic_income,
+            housing_allowances = _id.housing_allowances,
+            car_allowances = _id.car_allowances, 
+            petrol_allowances = _id.petrol_allowances,
+            food_allowances = _id.food_allowances,
+            others = _id.others,
+            incentive = _id.incentive,
+            total_gross_pay = _id.total_gross_pay,
+            net_pay = _id.total_gross_pay)
         response.js = "jQuery(alertify.success('Confirmed'), window.setTimeout(function(){window.location.reload()}, 1000));"
     elif auth.has_membership(role = 'MANAGEMENT'):
         _id.update_record(status_id = 4, mngt_remarks = request.vars.mngt_remarks, mngt_approved_by = auth.user_id)        

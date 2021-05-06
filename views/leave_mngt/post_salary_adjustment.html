@@ -54,18 +54,24 @@
                             <div class="col-sm-2">{{=form.custom.widget.mobile_allowances}}</div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Remarks</label>
-                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>        
+                            <label class="col-sm-2 control-label">Gross Pay</label>                            
+                            <div class="col-sm-2"><input class="form-control" id="total_gross_pay" name="total_gross_pay" type="text" readonly></div>        
+                            <label class="col-sm-4 control-label">Remarks</label>
+                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>                                                  
+                        </div>
+                        <div class="form-group">
+      
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-4">{{=form.custom.widget.status_id}}</div>
-                        </div>
-
-                            <label class="col-sm-8 control-label"></label>
+                            <label class="col-sm-2 control-label"></label>
                             <div class="col-sm-4">
                                 <input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
                                 <input class="btn btn-danger btn-flat" type="button" value="Abort" id="btnAbort">
-                            </div>                            
+                            </div>                                 
                         </div>
+
+                        
+                        
 
                         {{=form.custom.end}}        
                     </div>                    
@@ -82,6 +88,9 @@ $(document).ready(function(){
     });
     $("#btnAbort").click(function(){
         window.location.replace("{{=URL('leave_mngt','get_salary_adjustment_grid')}}")
+    });
+    $("#Salary_Adjustment_basic_income, #Salary_Adjustment_housing_allowances, #Salary_Adjustment_car_allowances").change(function(){
+
     });
 });
 </script>

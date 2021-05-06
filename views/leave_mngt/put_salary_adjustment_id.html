@@ -54,10 +54,24 @@
                             <div class="col-sm-2">{{=form.custom.widget.mobile_allowances}}</div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Remarks</label>
-                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>        
+                            <label class="col-sm-2 control-label">Gross Pay</label>                            
+                            <div class="col-sm-2">                                
+                                {{import locale}}
+                                <input class="form-control" id="total_gross_pay" name="total_gross_pay" value="{{=locale.format('%.2F',_row.total_gross_pay or 0, grouping = True)}}" readonly>
+                            </div>         
+                            <label class="col-sm-4 control-label">Remarks</label>
+                            <div class="col-sm-4">{{=form.custom.widget.remarks}}</div>                                                
+                        </div>                        
+                        <div class="form-group">
+       
                             <label class="col-sm-2 control-label">Status</label>
                             <div class="col-sm-4">{{=form.custom.widget.status_id}}</div>
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-4">
+                                <input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
+                                <input class="btn btn-danger btn-flat" type="button" value="Abort" id="btnAbort">
+                            </div>                            
+
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">HR Remarks</label>
@@ -68,11 +82,6 @@
                                     <input class="form-control" id="hr_remarks" name="hr_remarks" type="text" value="{{=_row.hr_remarks}}" readonly>                                    
                                 {{ pass }}                                
                             </div>        
-                            <label class="col-sm-2 control-label"></label>
-                            <div class="col-sm-4">
-                                <input class="btn btn-primary btn-flat" type="submit" value="Submit" id="btnSubmit">
-                                <input class="btn btn-danger btn-flat" type="button" value="Abort" id="btnAbort">
-                            </div>                            
 
                         </div>
                         <div class="form-group">                        

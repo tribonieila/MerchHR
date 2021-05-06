@@ -5,7 +5,7 @@
 # mail.settings.sender = 'merch-noreply@merch.com.qa'
 # mail.settings.login = 'merch-noreply@merch.com.qa:123P@ssw0rd45' # 45Password123
 # mail.settings.tls = 'smtp.tls'
-#   gmail = merch.noreply@gmail.com/45Password123 ()=> 45P@ssW0rd123
+#   gmail = merch.noreply@gmail.com/45Password123 ()=> 45P@ssW0rd123 => FwdMn39TJzRA
 
 # from gluon.tools import Mail
 # mail = Mail()
